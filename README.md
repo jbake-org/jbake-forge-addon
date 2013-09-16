@@ -1,4 +1,4 @@
-jbake-forge-plugin
+jbake-forge-addon
 ==================
 
-JBake Forge Plugin
+JBake Forge Addon
