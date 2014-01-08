@@ -1,8 +1,32 @@
+bin/
+impl/coverage.ec
+*.DS_Store
+
+# Java Clas Files #
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# IDE Files #
 .classpath
 .project
-/.settings
-/target
-/bin
-/dist
-/.idea
+.settings
 *.iml
+*.ipr
+*.iws
+*.swp
+.idea
+nb-configuration.xml
+
+# OS Specific folders/Files#
+.DS_Store
+
+# Build tool specific files/Folders #
+.gradle/
+dist/
+build/
+target/
+tests/target/

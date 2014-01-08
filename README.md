@@ -1,4 +1,4 @@
-jbake-forge-addon
-==================
+forge-jrebirth-addon
+====================
 
-JBake Forge Addon
+Forge2 JRebirth Plugin
