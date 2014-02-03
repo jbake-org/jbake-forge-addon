@@ -23,7 +23,7 @@ public class JRebirthFacetTest {
     
     @Deployment
     @Dependencies({
-             @AddonDependency(name = "org.jrebirth.forge.addon:jrebirth"),
+             @AddonDependency(name = "org.jrebirth.forge.addon:jrebirth:"),
              @AddonDependency(name = "org.jboss.forge.addon:maven")
     })
     public static ForgeArchive getDeployment()
@@ -51,6 +51,11 @@ public class JRebirthFacetTest {
        project = projectFactory.createTempProject();
     }
 
+    @Test
+    public void testTest()
+    {
+
+    }
    
 
 }
