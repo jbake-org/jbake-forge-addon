@@ -20,8 +20,8 @@ import java.util.logging.Logger;
 import javax.inject.Inject;
 
 import org.jbake.forge.addon.ui.AbstractJBakeCommand;
-import org.jboss.forge.addon.projects.BuildSystem;
 import org.jboss.forge.addon.projects.ProjectFactory;
+import org.jboss.forge.addon.projects.ProjectProvider;
 import org.jboss.forge.addon.resource.DirectoryResource;
 import org.jboss.forge.addon.resource.Resource;
 import org.jboss.forge.addon.resource.ResourceFactory;
@@ -55,7 +55,7 @@ public class JBakeNewProjectWizard extends AbstractJBakeCommand {
     private ResourceFactory resourceFactory;
 
     @Inject
-    private Imported<BuildSystem> buildSystems;
+    private Imported<ProjectProvider> buildSystems;
     
     @Inject
     @WithAttributes(label = "Site name", required = true)
