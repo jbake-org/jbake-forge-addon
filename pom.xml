@@ -1,65 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
-
 	<groupId>org.jbake.forge.addon</groupId>
-	<artifactId>forge-jbake-parent</artifactId>
+	<artifactId>jbake-addon-parent</artifactId>
 	<version>2.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<name>Forge - JBake Parent</name>
-
 	<modules>
+		<module>addon</module>
 		<module>api</module>
 		<module>impl</module>
 		<module>tests</module>
-		<module>addon</module>
 	</modules>
-
 	<properties>
-		<shrinkwrap.descriptors.version>2.0.0-alpha-3</shrinkwrap.descriptors.version>
-		<version.jboss.spec>3.0.2.Final</version.jboss.spec>
-
 		<version.furnace>2.0.0.Final</version.furnace>
-
-		<maven.required.version>3.1</maven.required.version>
-		<javase.required.version>1.6</javase.required.version>
 	</properties>
-
-
-	<prerequisites>
-		<maven>${maven.required.version}</maven>
-	</prerequisites>
-
-
 	<dependencyManagement>
 		<dependencies>
-			<dependency>
-				<groupId>org.jboss.spec</groupId>
-				<artifactId>jboss-javaee-6.0</artifactId>
-				<version>${version.jboss.spec}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-
-
-			<dependency>
-				<groupId>org.jbake.forge.addon</groupId>
-				<artifactId>jbake</artifactId>
-				<version>${project.version}</version>
-				<classifier>forge-addon</classifier>
-			</dependency>
-			<dependency>
-				<groupId>org.jbake.forge.addon</groupId>
-				<artifactId>forge-jbake-api</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.jbake.forge.addon</groupId>
-				<artifactId>forge-jbake-impl</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-
 
 			<dependency>
 				<groupId>org.jboss.forge.addon</groupId>
@@ -97,47 +55,105 @@
 				<version>${version.furnace}</version>
 				<classifier>forge-addon</classifier>
 			</dependency>
-			
 			<dependency>
-			<groupId>org.jboss.forge.furnace.container</groupId>
-			<artifactId>cdi</artifactId>
-			<version>${version.furnace}</version>
-			<classifier>forge-addon</classifier>
-			<scope>provided</scope>
-		</dependency>
+				<groupId>org.jboss.forge.addon</groupId>
+				<artifactId>core</artifactId>
+				<version>${version.furnace}</version>
+				<classifier>forge-addon</classifier>
+			</dependency>
 
 			<dependency>
-				<groupId>org.jboss.shrinkwrap.descriptors</groupId>
-				<artifactId>shrinkwrap-descriptors-bom</artifactId>
-				<version>${shrinkwrap.descriptors.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
+				<groupId>org.jboss.forge.addon</groupId>
+				<artifactId>maven</artifactId>
+				<version>${version.furnace}</version>
+				<classifier>forge-addon</classifier>
+			</dependency>
+
+			<dependency>
+				<groupId>org.jboss.forge.furnace.container</groupId>
+				<artifactId>cdi</artifactId>
+				<version>${version.furnace}</version>
+				<classifier>forge-addon</classifier>
+				<scope>provided</scope>
+			</dependency>
+
+
+
+			<dependency>
+				<groupId>org.jboss.forge.furnace</groupId>
+				<artifactId>furnace-api</artifactId>
+				<version>${version.furnace}</version>
+				<scope>provided</scope>
 			</dependency>
 			<dependency>
-				<groupId>org.freemarker</groupId>
-				<artifactId>freemarker</artifactId>
-				<version>2.3.20</version>
+				<groupId>org.jboss.forge.furnace.container</groupId>
+				<artifactId>cdi-api</artifactId>
+				<version>${version.furnace}</version>
+				<scope>provided</scope>
 			</dependency>
 			<dependency>
-				<groupId>junit</groupId>
-				<artifactId>junit</artifactId>
-				<version>4.11</version>
+				<groupId>org.jboss.forge.furnace.test</groupId>
+				<artifactId>arquillian-furnace-classpath</artifactId>
+				<version>${version.furnace}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.forge.furnace.test</groupId>
+				<artifactId>furnace-test-harness</artifactId>
+				<version>${version.furnace}</version>
+				<scope>test</scope>
+			</dependency>
+
+
+			<!-- JBake -->
+
+			<dependency>
+				<groupId>org.jbake.forge.addon</groupId>
+				<artifactId>jbake-addon</artifactId>
+				<version>${project.version}</version>
+				<classifier>forge-addon</classifier>
+			</dependency>
+			<dependency>
+				<groupId>org.jbake.forge.addon</groupId>
+				<artifactId>jbake-addon-api</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jbake.forge.addon</groupId>
+				<artifactId>jbake-addon-impl</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jbake.forge.addon</groupId>
+				<artifactId>jbake-addon-spi</artifactId>
+				<version>${project.version}</version>
+				<classifier>forge-addon</classifier>
+			</dependency>
+
+			<dependency>
+				<groupId>org.jboss.forge.addon</groupId>
+				<artifactId>parser-xml</artifactId>
+				<classifier>forge-addon</classifier>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.forge.furnace.container</groupId>
+				<artifactId>cdi</artifactId>
+				<classifier>forge-addon</classifier>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-
 	<build>
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.1</version>
 				<configuration>
-					<source>${javase.required.version}</source>
-					<target>${javase.required.version}</target>
+					<source>1.6</source>
+					<target>1.6</target>
 					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
 		</plugins>
 	</build>
-
 </project>

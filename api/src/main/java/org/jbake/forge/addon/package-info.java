@@ -1,0 +1,1 @@
+package org.jbake.forge.addon;

@@ -4,37 +4,30 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.jbake.forge.addon</groupId>
-		<artifactId>forge-jbake-parent</artifactId>
+		<artifactId>jbake-addon-parent</artifactId>
 		<version>2.0.0-SNAPSHOT</version>
 	</parent>
-	<artifactId>jbake</artifactId>
-	<name>Forge - JBake Addon</name>
-
+	<artifactId>jbake-addon</artifactId>
 	<dependencies>
 		<dependency>
-			<groupId>org.jbake.forge.addon</groupId>
-			<artifactId>forge-jbake-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.jbake.forge.addon</groupId>
-			<artifactId>forge-jbake-impl</artifactId>
-			<scope>runtime</scope>
+			<groupId>org.jboss.forge.furnace.container</groupId>
+			<artifactId>cdi</artifactId>
+			<classifier>forge-addon</classifier>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.forge.addon</groupId>
 			<artifactId>ui</artifactId>
 			<classifier>forge-addon</classifier>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.jboss.forge.addon</groupId>
-			<artifactId>templates</artifactId>
-			<classifier>forge-addon</classifier>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.forge.addon</groupId>
 			<artifactId>projects</artifactId>
+			<classifier>forge-addon</classifier>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.forge.addon</groupId>
+			<artifactId>maven</artifactId>
 			<classifier>forge-addon</classifier>
 		</dependency>
 		<dependency>
@@ -44,56 +37,53 @@
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.forge.addon</groupId>
-			<artifactId>parser-xml</artifactId>
+			<artifactId>core</artifactId>
 			<classifier>forge-addon</classifier>
 		</dependency>
 		<dependency>
-			<groupId>org.jboss.forge.addon</groupId>
-			<artifactId>text</artifactId>
-			<classifier>forge-addon</classifier>
+			<groupId>org.jbake.forge.addon</groupId>
+			<artifactId>jbake-addon-api</artifactId>
 		</dependency>
-		<!-- Furnace Container -->
 		<dependency>
-			<groupId>org.jboss.forge.furnace.container</groupId>
-			<artifactId>cdi</artifactId>
-			<classifier>forge-addon</classifier>
-			<scope>provided</scope>
+			<groupId>org.jbake.forge.addon</groupId>
+			<artifactId>jbake-addon-impl</artifactId>
+			<scope>runtime</scope>
 		</dependency>
 	</dependencies>
-	 <build>
-      <plugins>
-         <plugin>
-            <groupId>org.jboss.forge.furnace</groupId>
-            <artifactId>furnace-maven-plugin</artifactId>
-            	<version>${version.furnace}</version>
-            <executions>
-               <execution>
-                  <id>generate-dot</id>
-                  <phase>prepare-package</phase>
-                  <goals>
-                     <goal>generate-dot</goal>
-                  </goals>
-                  <configuration>
-                     <attach>true</attach>
-                  </configuration>
-               </execution>
-            </executions>
-         </plugin>
-         <plugin>
-            <artifactId>maven-jar-plugin</artifactId>
-            <executions>
-               <execution>
-                  <id>create-forge-addon</id>
-                  <phase>package</phase>
-                  <goals>
-                     <goal>jar</goal>
-                  </goals>
-                  <configuration>
-                     <classifier>forge-addon</classifier>
-                  </configuration>
-               </execution>
-            </executions>
-         </plugin>
-      </plugins>
-   </build>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.jboss.forge.furnace</groupId>
+				<artifactId>furnace-maven-plugin</artifactId>
+				<version>${version.furnace}</version>
+				<executions>
+					<execution>
+						<id>generate-dot</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>generate-dot</goal>
+						</goals>
+						<configuration>
+							<attach>true</attach>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-jar-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>create-forge-addon</id>
+						<phase>package</phase>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+						<configuration>
+							<classifier>forge-addon</classifier>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>
