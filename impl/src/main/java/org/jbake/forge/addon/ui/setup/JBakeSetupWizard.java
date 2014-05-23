@@ -44,9 +44,9 @@ import org.jboss.forge.furnace.util.OperatingSystemUtils;
  * 
  * @author Rajmahendra Hegde <rajmahendra@gmail.com>
  */
-public class JBakeNewProjectWizard extends AbstractJBakeCommand {
+public class JBakeSetupWizard extends AbstractJBakeCommand {
 
-    private static final Logger log = Logger.getLogger(JBakeNewProjectWizard.class.getName());
+    private static final Logger log = Logger.getLogger(JBakeSetupWizard.class.getName());
 
     @Inject
     private ProjectFactory projectFactory;
@@ -57,64 +57,37 @@ public class JBakeNewProjectWizard extends AbstractJBakeCommand {
     @Inject
     private Imported<ProjectProvider> buildSystems;
     
-    @Inject
-    @WithAttributes(label = "Site name", required = true)
-    private UIInput<String> siteName;
 
-    @Inject
-    @WithAttributes(label = "Project Folder Name", required = true)
-    private UIInput<String> projectFolderName;
-
-    @Inject
-    @WithAttributes(label = "Project location")
-    private UIInput<DirectoryResource> targetLocation;
-
-    @Inject
-    @WithAttributes(label = "Overwrite existing project location")
-    private UIInput<Boolean> overwrite;
 
     @Override
     public void initializeUI(final UIBuilder builder) throws Exception
     {
         configureTargetLocationInput(builder);
-        builder.add(siteName).add(projectFolderName).add(targetLocation).add(overwrite);
+
     }
 
     private void configureTargetLocationInput(final UIBuilder builder)
     {
-        UISelection<Resource<?>> currentSelection = builder.getUIContext().getInitialSelection();
-        if (!currentSelection.isEmpty())
-        {
-            Resource<?> resource = currentSelection.get();
-            if (resource instanceof DirectoryResource)
-            {
-                targetLocation.setDefaultValue((DirectoryResource) resource);
-            }
-        }
-        else
-        {
-            targetLocation.setDefaultValue(resourceFactory.create(DirectoryResource.class,
-                    OperatingSystemUtils.getUserHomeDir()));
-        }
+       
     }
 
     @Override
     public Result execute(UIExecutionContext context) throws Exception {
 
-        return Results.success("JRebirth has been installed.");
+        return Results.success("JBake has been installed.");
     }
 
     @Override
     public UICommandMetadata getMetadata(UIContext context)
     {
-        return Metadata.from(super.getMetadata(context), getClass()).name("JBake: New Project")
-                .description("Creates a new JBake project")
+        return Metadata.from(super.getMetadata(context), getClass()).name("JBake: Setup Project")
+                .description("Setup a JBake project")
                 .category(Categories.create(super.getMetadata(context).getCategory(), "JBake"));
     }
 
     @Override
     protected boolean isProjectRequired() {
-        return false;
+        return true;
     }
 
 }
