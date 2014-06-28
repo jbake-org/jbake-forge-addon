@@ -18,11 +18,14 @@ package org.jbake.forge.addon.ui;
 import javax.inject.Inject;
 
 import org.jboss.forge.addon.projects.ProjectFactory;
+import org.jboss.forge.addon.projects.ProjectProvider;
 import org.jboss.forge.addon.projects.ui.AbstractProjectCommand;
+import org.jboss.forge.addon.resource.ResourceFactory;
 import org.jboss.forge.addon.ui.context.UIContext;
 import org.jboss.forge.addon.ui.metadata.UICommandMetadata;
 import org.jboss.forge.addon.ui.util.Categories;
 import org.jboss.forge.addon.ui.util.Metadata;
+import org.jboss.forge.furnace.services.Imported;
 
 /**
  * 
@@ -32,7 +35,13 @@ import org.jboss.forge.addon.ui.util.Metadata;
 public abstract class AbstractJBakeCommand extends AbstractProjectCommand {
 
     @Inject
-    private ProjectFactory projectFactory;
+    protected ProjectFactory projectFactory;
+
+    @Inject
+    protected ResourceFactory resourceFactory;
+
+    @Inject
+    protected Imported<ProjectProvider> buildSystems;
 
     @Override
     public UICommandMetadata getMetadata(UIContext context)

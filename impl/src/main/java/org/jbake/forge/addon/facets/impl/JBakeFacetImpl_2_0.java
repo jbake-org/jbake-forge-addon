@@ -4,15 +4,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import org.jbake.forge.addon.facets.AbstractJBakeFacet;
 import org.jboss.forge.addon.dependencies.Dependency;
 import org.jboss.forge.addon.projects.dependencies.DependencyInstaller;
 import org.jboss.forge.furnace.versions.SingleVersion;
 import org.jboss.forge.furnace.versions.Version;
 
-public class JBakeFacetImpl extends AbstractJBakeFacet {
+public class JBakeFacetImpl_2_0 extends AbstractJBakeFacet {
 
-    public JBakeFacetImpl(DependencyInstaller installer) {
+	@Inject
+    public JBakeFacetImpl_2_0(DependencyInstaller installer) {
         super(installer);
     }
 
@@ -21,5 +24,9 @@ public class JBakeFacetImpl extends AbstractJBakeFacet {
         Map<Dependency, List<Dependency>> dependency = new HashMap<Dependency, List<Dependency>>();
         return dependency;
     }
+    
+	public Version getSpecVersion() {
+		return new SingleVersion("1.0");
+	}
 
 }
