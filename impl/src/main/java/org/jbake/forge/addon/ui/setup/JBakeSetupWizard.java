@@ -21,6 +21,8 @@ import javax.inject.Inject;
 
 import org.jbake.forge.addon.facets.JBakeFacet;
 import org.jbake.forge.addon.ui.AbstractJBakeCommand;
+import org.jboss.forge.addon.projects.facets.DependencyFacet;
+import org.jboss.forge.addon.projects.facets.ResourcesFacet;
 import org.jboss.forge.addon.ui.context.UIBuilder;
 import org.jboss.forge.addon.ui.context.UIContext;
 import org.jboss.forge.addon.ui.context.UIExecutionContext;
@@ -30,15 +32,18 @@ import org.jboss.forge.addon.ui.result.Result;
 import org.jboss.forge.addon.ui.result.Results;
 import org.jboss.forge.addon.ui.util.Categories;
 import org.jboss.forge.addon.ui.util.Metadata;
+import org.jboss.forge.addon.ui.input.UISelectOne;
 import org.jboss.forge.furnace.versions.SingleVersion;
 import org.jboss.forge.furnace.versions.Version;
+import org.jboss.forge.addon.facets.FacetFactory;
+import org.jboss.forge.addon.facets.constraints.FacetConstraint;
 
 /**
  * 
  * 
  * @author Rajmahendra Hegde <rajmahendra@gmail.com>
  */
-
+@FacetConstraint({ DependencyFacet.class, ResourcesFacet.class })
 public class JBakeSetupWizard extends AbstractJBakeCommand {
 
 	private static final Logger log = Logger.getLogger(JBakeSetupWizard.class
@@ -46,10 +51,10 @@ public class JBakeSetupWizard extends AbstractJBakeCommand {
 
 	@Inject
 	@WithAttributes(required = true, label = "JBake Version", defaultValue = "2.0")
-	private org.jboss.forge.addon.ui.input.UISelectOne<JBakeFacet> jbakeVersion;
+	private UISelectOne<JBakeFacet> jbakeVersion;
 
 	@Inject
-	private org.jboss.forge.addon.facets.FacetFactory facetFactory;
+	private FacetFactory facetFactory;
 
 	@Override
 	public void initializeUI(final UIBuilder builder) throws Exception {
