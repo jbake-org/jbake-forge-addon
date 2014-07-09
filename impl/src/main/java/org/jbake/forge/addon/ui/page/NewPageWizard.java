@@ -62,7 +62,7 @@ public class NewPageWizard extends AbstractJBakeCommand {
     private UISelectOne<JBakePublishType> pageStatus;
 
     @Override
-    public void initializeUI(UIBuilder builder) throws Exception {
+    public void initializeUI(final UIBuilder builder) throws Exception {
 
         configureInputs(builder);
 
