@@ -17,9 +17,11 @@ package org.jbake.forge.addon.ui.post;
 
 import javax.inject.Inject;
 
+import org.jbake.forge.addon.facets.JBakeFacet;
 import org.jbake.forge.addon.ui.AbstractJBakeCommand;
 import org.jbake.forge.addon.ui.JBakePublishType;
 import org.jboss.forge.addon.convert.Converter;
+import org.jboss.forge.addon.facets.constraints.FacetConstraint;
 import org.jboss.forge.addon.ui.context.UIBuilder;
 import org.jboss.forge.addon.ui.context.UIContext;
 import org.jboss.forge.addon.ui.context.UIExecutionContext;
@@ -38,6 +40,7 @@ import org.jboss.forge.addon.ui.util.Metadata;
  * 
  * @author Rajmahendra Hegde <rajmahendra@gmail.com>
  */
+@FacetConstraint({ JBakeFacet.class})
 public class NewPostWizard extends AbstractJBakeCommand {
 
     @Inject

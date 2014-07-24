@@ -34,73 +34,71 @@ import org.jboss.forge.addon.projects.facets.DependencyFacet;
  * 
  * @author Rajmahendra Hegde <rajmahendra@gmail.com>
  */
-public abstract class AbstractJBakeFacet extends AbstractFacet<Project> implements ProjectFacet {
+public abstract class AbstractJBakeFacet extends AbstractFacet<Project>
+		implements ProjectFacet,JBakeFacet {
 
-    protected static final Dependency JREBORTH_DEPENDENCY =
-            DependencyBuilder.create().setGroupId("").setArtifactId("").setVersion("");
+	protected static final Dependency JBAKE_DEPENDENCY = DependencyBuilder
+			.create().setGroupId("").setArtifactId("").setVersion("");
 
-    private final DependencyInstaller installer;
+	private final DependencyInstaller installer;
 
-    @Inject
-    public AbstractJBakeFacet(final DependencyInstaller installer) {
-        this.installer = installer;
-    }
+	@Inject
+	public AbstractJBakeFacet(final DependencyInstaller installer) {
+		this.installer = installer;
+	}
 
-    abstract protected Map<Dependency, List<Dependency>> getRequiredDependencyOptions();
+	abstract protected Map<Dependency, List<Dependency>> getRequiredDependencyOptions();
 
-    @Override
-    public boolean install()
-    {
-        addRequiredDependency();
-        return true;
-    }
+	@Override
+	public boolean install() {
+		addRequiredDependency();
+		return true;
+	}
 
-    @Override
-    public boolean isInstalled()
-    {
-        return isDependencyRequirementsMet();
-    }
+	@Override
+	public boolean isInstalled() {
+		return isDependencyRequirementsMet();
+	}
 
-    private void addRequiredDependency() {
-        boolean isInstalled = false;
-        DependencyFacet dependencyFacet = origin.getFacet(DependencyFacet.class);
-        for (Entry<Dependency, List<Dependency>> group : getRequiredDependencyOptions().entrySet())
-        {
-            for (Dependency dependency : group.getValue())
-            {
-                if (dependencyFacet.hasEffectiveDependency(dependency))
-                {
-                    isInstalled = true;
-                    break;
-                }
-            }
-            if (!isInstalled)
-            {
-                installer.installManaged(origin, JREBORTH_DEPENDENCY);
-                installer.install(origin, group.getKey());
-            }
-        }
-    }
+	private void addRequiredDependency() {
+		boolean isInstalled = false;
+		DependencyFacet dependencyFacet = origin
+				.getFacet(DependencyFacet.class);
+		for (Entry<Dependency, List<Dependency>> group : getRequiredDependencyOptions()
+				.entrySet()) {
+			for (Dependency dependency : group.getValue()) {
+				if (dependencyFacet.hasEffectiveDependency(dependency)) {
+					isInstalled = true;
+					break;
+				}
+			}
+			if (!isInstalled) {
+				installer.installManaged(origin, JBAKE_DEPENDENCY);
+				installer.install(origin, group.getKey());
+			}
+		}
+	}
 
-    protected boolean isDependencyRequirementsMet()
-    {
-        DependencyFacet deps = origin.getFacet(DependencyFacet.class);
-        for (Entry<Dependency, List<Dependency>> group : getRequiredDependencyOptions().entrySet())
-        {
-            boolean satisfied = false;
-            for (Dependency dependency : group.getValue())
-            {
-                if (deps.hasEffectiveDependency(dependency))
-                {
-                    satisfied = true;
-                    break;
-                }
-            }
+	protected boolean isDependencyRequirementsMet() {
+		DependencyFacet deps = origin.getFacet(DependencyFacet.class);
+		for (Entry<Dependency, List<Dependency>> group : getRequiredDependencyOptions()
+				.entrySet()) {
+			boolean satisfied = false;
+			for (Dependency dependency : group.getValue()) {
+				if (deps.hasEffectiveDependency(dependency)) {
+					satisfied = true;
+					break;
+				}
+			}
 
-            if (!satisfied)
-                return false;
-        }
-        return true;
-    }
-
+			if (!satisfied)
+				return false;
+		}
+		return true;
+	}
+	
+	@Override
+	public String toString() {
+		return getSpecVersion().toString();
+	}
 }

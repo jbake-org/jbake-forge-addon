@@ -13,8 +13,7 @@ import org.jboss.forge.addon.projects.dependencies.DependencyInstaller;
 import org.jboss.forge.furnace.versions.SingleVersion;
 import org.jboss.forge.furnace.versions.Version;
 
-public class JBakeFacetImpl_2_0 extends AbstractJBakeFacet implements
-		JBakeFacet {
+public class JBakeFacetImpl_2_0 extends AbstractJBakeFacet {
 
 	@Inject
 	public JBakeFacetImpl_2_0(DependencyInstaller installer) {
@@ -31,5 +30,7 @@ public class JBakeFacetImpl_2_0 extends AbstractJBakeFacet implements
 	public Version getSpecVersion() {
 		return new SingleVersion("2.0");
 	}
+	
+
 
 }
