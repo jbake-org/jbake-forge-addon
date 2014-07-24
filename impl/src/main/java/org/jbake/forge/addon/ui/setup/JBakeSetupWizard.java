@@ -43,7 +43,7 @@ import org.jboss.forge.addon.facets.constraints.FacetConstraint;
  * 
  * @author Rajmahendra Hegde <rajmahendra@gmail.com>
  */
-@FacetConstraint({ DependencyFacet.class, ResourcesFacet.class })
+
 public class JBakeSetupWizard extends AbstractJBakeCommand {
 
 	private static final Logger log = Logger.getLogger(JBakeSetupWizard.class
