@@ -135,12 +135,14 @@
 			<dependency>
 				<groupId>org.jboss.forge.addon</groupId>
 				<artifactId>parser-xml</artifactId>
+				<version>${version.furnace}</version>
 				<classifier>forge-addon</classifier>
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.jboss.forge.furnace.container</groupId>
 				<artifactId>cdi</artifactId>
+				<version>${version.furnace}</version>
 				<classifier>forge-addon</classifier>
 			</dependency>
 		</dependencies>
