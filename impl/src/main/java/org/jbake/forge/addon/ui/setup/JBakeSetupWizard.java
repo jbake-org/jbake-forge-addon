@@ -20,23 +20,20 @@ import java.util.logging.Logger;
 import javax.inject.Inject;
 
 import org.jbake.forge.addon.facets.JBakeFacet;
+import org.jbake.forge.addon.types.JBakeTemplateType;
 import org.jbake.forge.addon.ui.AbstractJBakeCommand;
-import org.jboss.forge.addon.projects.facets.DependencyFacet;
-import org.jboss.forge.addon.projects.facets.ResourcesFacet;
+import org.jboss.forge.addon.facets.FacetFactory;
 import org.jboss.forge.addon.ui.context.UIBuilder;
 import org.jboss.forge.addon.ui.context.UIContext;
 import org.jboss.forge.addon.ui.context.UIExecutionContext;
+import org.jboss.forge.addon.ui.hints.InputType;
+import org.jboss.forge.addon.ui.input.UISelectOne;
 import org.jboss.forge.addon.ui.metadata.UICommandMetadata;
 import org.jboss.forge.addon.ui.metadata.WithAttributes;
 import org.jboss.forge.addon.ui.result.Result;
 import org.jboss.forge.addon.ui.result.Results;
 import org.jboss.forge.addon.ui.util.Categories;
 import org.jboss.forge.addon.ui.util.Metadata;
-import org.jboss.forge.addon.ui.input.UISelectOne;
-import org.jboss.forge.furnace.versions.SingleVersion;
-import org.jboss.forge.furnace.versions.Version;
-import org.jboss.forge.addon.facets.FacetFactory;
-import org.jboss.forge.addon.facets.constraints.FacetConstraint;
 
 /**
  * 
@@ -54,11 +51,15 @@ public class JBakeSetupWizard extends AbstractJBakeCommand {
 	private UISelectOne<JBakeFacet> jbakeVersion;
 
 	@Inject
+	@WithAttributes(label = "Template Engine", type = InputType.RADIO, required = true)
+	private UISelectOne<JBakeTemplateType> templateEngine;
+
+	@Inject
 	private FacetFactory facetFactory;
 
 	@Override
 	public void initializeUI(final UIBuilder builder) throws Exception {
-		builder.add(jbakeVersion);
+		builder.add(jbakeVersion).add(templateEngine);
 
 	}
 
