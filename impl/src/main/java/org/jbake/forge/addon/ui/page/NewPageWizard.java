@@ -20,8 +20,9 @@ import java.util.Date;
 import javax.inject.Inject;
 
 import org.jbake.forge.addon.facets.JBakeFacet;
+import org.jbake.forge.addon.types.ContentType;
+import org.jbake.forge.addon.types.PublishType;
 import org.jbake.forge.addon.ui.AbstractJBakeCommand;
-import org.jbake.forge.addon.ui.JBakePublishType;
 import org.jboss.forge.addon.convert.Converter;
 import org.jboss.forge.addon.facets.constraints.FacetConstraint;
 import org.jboss.forge.addon.ui.context.UIBuilder;
@@ -33,6 +34,7 @@ import org.jboss.forge.addon.ui.input.UISelectOne;
 import org.jboss.forge.addon.ui.metadata.UICommandMetadata;
 import org.jboss.forge.addon.ui.metadata.WithAttributes;
 import org.jboss.forge.addon.ui.result.Result;
+import org.jboss.forge.addon.ui.result.Results;
 import org.jboss.forge.addon.ui.util.Categories;
 import org.jboss.forge.addon.ui.util.Metadata;
 
@@ -41,71 +43,77 @@ import org.jboss.forge.addon.ui.util.Metadata;
  * 
  * @author Rajmahendra Hegde <rajmahendra@gmail.com>
  */
-@FacetConstraint({ JBakeFacet.class})
+@FacetConstraint({ JBakeFacet.class })
 public class NewPageWizard extends AbstractJBakeCommand {
 
-    @Inject
-    @WithAttributes(label = "Page Title", required = true)
-    private UIInput<String> pageTitle;
+	@Inject
+	@WithAttributes(label = "Page Title", required = true)
+	private UIInput<String> pageTitle;
 
-    @Inject
-    @WithAttributes(label = "Date of Created/Modified")
-    private UIInput<String> dateOfCreated;
+	@Inject
+	@WithAttributes(label = "File Type", type = InputType.RADIO, required = true)
+	private UISelectOne<ContentType> fileType;
 
-    @Inject
-    @WithAttributes(label = "Page Type", required = true)
-    private UIInput<String> pageType;
+	@Inject
+	@WithAttributes(label = "Date of Created/Modified")
+	private UIInput<String> dateOfCreated;
 
-    @Inject
-    @WithAttributes(label = "Page Tags")
-    private UIInput<String> pageTags;
+	@Inject
+	@WithAttributes(label = "Page Type", required = true)
+	private UIInput<String> pageType;
 
-    @Inject
-    @WithAttributes(label = "Page Status", type = InputType.RADIO, required = true)
-    private UISelectOne<JBakePublishType> pageStatus;
+	@Inject
+	@WithAttributes(label = "Page Tags")
+	private UIInput<String> pageTags;
 
-    @Override
-    public void initializeUI(final UIBuilder builder) throws Exception {
+	@Inject
+	@WithAttributes(label = "Page Status", type = InputType.RADIO, required = true)
+	private UISelectOne<PublishType> pageStatus;
 
-        configureInputs(builder);
+	@Override
+	public void initializeUI(final UIBuilder builder) throws Exception {
 
-        builder.add(pageTitle).add(dateOfCreated).add(pageType).add(pageTags).add(pageStatus);
-    }
+		configureInputs(builder);
 
-    @Override
-    public Result execute(UIExecutionContext context) throws Exception {
-        return null;
-    }
+		builder.add(pageTitle).add(dateOfCreated).add(pageType).add(pageTags)
+				.add(fileType).add(pageStatus);
+	}
 
-    @Override
-    protected boolean isProjectRequired() {
-        return true;
-    }
+	@Override
+	public Result execute(UIExecutionContext context) throws Exception {
+		return Results.success("The Page Is Created.");
+	}
 
-    private void configureInputs(UIBuilder builder) {
-        
-        dateOfCreated.setValue(new Date().toString());
+	@Override
+	protected boolean isProjectRequired() {
+		return true;
+	}
 
-        if (builder.getUIContext().getProvider().isGUI())
-        {
-            pageStatus.setItemLabelConverter(new Converter<JBakePublishType, String>()
-            {
-                @Override
-                public String convert(JBakePublishType source)
-                {
-                    return source != null ? source.text() : null;
-                }
-            });
-        }
+	private void configureInputs(UIBuilder builder) {
 
-    }
+		dateOfCreated.setValue(new Date().toString());
 
-    @Override
-    public UICommandMetadata getMetadata(UIContext context)
-    {
-        return Metadata.from(super.getMetadata(context), getClass()).name("JBake: New Page")
-                .description("Creates a new Page")
-                .category(Categories.create(super.getMetadata(context).getCategory(), "JBake"));
-    }
+		if (builder.getUIContext().getProvider().isGUI()) {
+			pageStatus
+					.setItemLabelConverter(new Converter<PublishType, String>() {
+						@Override
+						public String convert(PublishType source) {
+							return source != null ? source.text() : null;
+						}
+					});
+		}
+
+	}
+
+	@Override
+	public UICommandMetadata getMetadata(UIContext context) {
+		return Metadata
+				.from(super.getMetadata(context), getClass())
+				.name("JBake: New Page")
+				.description("Creates a new Page")
+				.category(
+						Categories.create(super.getMetadata(context)
+								.getCategory(), "JBake"));
+	}
 
 }

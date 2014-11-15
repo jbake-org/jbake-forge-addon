@@ -13,23 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jbake.forge.addon.ui;
+package org.jbake.forge.addon.types;
 
 /**
  * 
  * 
  * @author Rajmahendra Hegde <rajmahendra@gmail.com>
  */
-public enum JBakePublishType {
+public enum PublishType {
 
     DRAFT("Draft"), PUBLISH("Published");
 
     private String text;
 
-    JBakePublishType() {
+    PublishType() {
     }
 
-    JBakePublishType(String theText) {
+    PublishType(String theText) {
         text = theText;
     }
 
