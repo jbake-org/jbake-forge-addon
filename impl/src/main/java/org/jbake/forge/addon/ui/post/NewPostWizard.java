@@ -18,8 +18,9 @@ package org.jbake.forge.addon.ui.post;
 import javax.inject.Inject;
 
 import org.jbake.forge.addon.facets.JBakeFacet;
+import org.jbake.forge.addon.types.ContentType;
+import org.jbake.forge.addon.types.PublishType;
 import org.jbake.forge.addon.ui.AbstractJBakeCommand;
-import org.jbake.forge.addon.ui.JBakePublishType;
 import org.jboss.forge.addon.convert.Converter;
 import org.jboss.forge.addon.facets.constraints.FacetConstraint;
 import org.jboss.forge.addon.ui.context.UIBuilder;
@@ -40,65 +41,71 @@ import org.jboss.forge.addon.ui.util.Metadata;
  * 
  * @author Rajmahendra Hegde <rajmahendra@gmail.com>
  */
-@FacetConstraint({ JBakeFacet.class})
+@FacetConstraint({ JBakeFacet.class })
 public class NewPostWizard extends AbstractJBakeCommand {
 
-    @Inject
-    @WithAttributes(label = "Post Title", required = true)
-    private UIInput<String> postTitle;
+	@Inject
+	@WithAttributes(label = "Post Title", required = true)
+	private UIInput<String> postTitle;
 
-    @Inject
-    @WithAttributes(label = "Date of Created/Modified")
-    private UIInput<String> dateOfCreated;
+	@Inject
+	@WithAttributes(label = "Date of Created/Modified")
+	private UIInput<String> dateOfCreated;
 
-    @Inject
-    @WithAttributes(label = "Post Type")
-    private UIInput<String> postType;
+	@Inject
+	@WithAttributes(label = "File Type", type = InputType.RADIO, required = true)
+	private UISelectOne<ContentType> fileType;
 
-    @Inject
-    @WithAttributes(label = "Post Tags")
-    private UIInput<String> postTags;
+	@Inject
+	@WithAttributes(label = "Post Type")
+	private UIInput<String> postType;
 
-    @Inject
-    @WithAttributes(label = "Post Status", type = InputType.RADIO)
-    private UISelectOne<JBakePublishType> postStatus;
+	@Inject
+	@WithAttributes(label = "Post Tags")
+	private UIInput<String> postTags;
 
-    @Override
-    public void initializeUI(UIBuilder builder) throws Exception {
+	@Inject
+	@WithAttributes(label = "Post Status", type = InputType.RADIO)
+	private UISelectOne<PublishType> postStatus;
 
-        if (builder.getUIContext().getProvider().isGUI())
-        {
-            postStatus.setItemLabelConverter(new Converter<JBakePublishType, String>()
-            {
-                @Override
-                public String convert(JBakePublishType source)
-                {
-                    return source != null ? source.text() : null;
-                }
-            });
-        }
+	@Override
+	public void initializeUI(UIBuilder builder) throws Exception {
 
-        builder.add(postTitle).add(dateOfCreated).add(postType).add(postTags).add(postStatus);
+		if (builder.getUIContext().getProvider().isGUI()) {
+			postStatus
+					.setItemLabelConverter(new Converter<PublishType, String>() {
+						@Override
+						public String convert(PublishType source) {
+							return source != null ? source.text() : null;
+						}
+					});
+		}
 
-    }
+		builder.add(postTitle).add(dateOfCreated).add(postType).add(postTags)
+				.add(fileType).add(postStatus);
 
-    @Override
-    public Result execute(UIExecutionContext context) throws Exception {
-        return Results.success("The Page Is Created.");
-    }
+	}
 
-    @Override
-    protected boolean isProjectRequired() {
+	@Override
+	public Result execute(UIExecutionContext context) throws Exception {
+		return Results.success("The Post Is Created.");
+	}
 
-        return true;
-    }
+	@Override
+	protected boolean isProjectRequired() {
 
-    @Override
-    public UICommandMetadata getMetadata(UIContext context)
-    {
-        return Metadata.from(super.getMetadata(context), getClass()).name("JBake: New Post")
-                .description("Creates a new Post")
-                .category(Categories.create(super.getMetadata(context).getCategory(), "JBake"));
-    }
+		return true;
+	}
+
+	@Override
+	public UICommandMetadata getMetadata(UIContext context) {
+		return Metadata
+				.from(super.getMetadata(context), getClass())
+				.name("JBake: New Post")
+				.description("Creates a new Post")
+				.category(
+						Categories.create(super.getMetadata(context)
+								.getCategory(), "JBake"));
+	}
 
 }
