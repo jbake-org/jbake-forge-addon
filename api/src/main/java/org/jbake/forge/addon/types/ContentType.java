@@ -1,7 +1,7 @@
 package org.jbake.forge.addon.types;
 
 public enum ContentType {
-	MARLDOWN, ASCIIDOC, HTML;
+	Markdown, AsciiDoc, HTML;
 
 	String text;
 	String extn;
