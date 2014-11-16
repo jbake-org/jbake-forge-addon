@@ -1,15 +1,15 @@
 package org.jbake.forge.addon.types;
 
-public enum JBakeTemplateType {
+public enum TemplateType {
 
-	FREEMARKER("FreeMarker"), GROOVY("Groovy"), THYMELEAF("Thymeleaf");
+	FreeMarker("FreeMarker"), Groovy("Groovy"), Thymeleaf("Thymeleaf");
 
 	private String text;
 
-	JBakeTemplateType() {
+	TemplateType() {
 	}
 
-	JBakeTemplateType(String theText) {
+	TemplateType(String theText) {
 		text = theText;
 	}
 
