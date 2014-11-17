@@ -45,27 +45,31 @@ import org.jboss.forge.addon.ui.util.Metadata;
 public class NewPostWizard extends AbstractJBakeCommand {
 
 	@Inject
-	@WithAttributes(label = "Post Title", required = true)
+	@WithAttributes(label = "Post Title", required = true, shortName = 't')
 	private UIInput<String> postTitle;
 
 	@Inject
-	@WithAttributes(label = "Date of Created/Modified")
+	@WithAttributes(label = "Target Directory", type = InputType.DIRECTORY_PICKER, shortName = 'd')
+	private UIInput<String> targetDirectory;
+
+	@Inject
+	@WithAttributes(label = "Date of Created/Modified", shortName = 'c')
 	private UIInput<String> dateOfCreated;
 
 	@Inject
-	@WithAttributes(label = "File Type", type = InputType.RADIO, required = true)
+	@WithAttributes(label = "File Type", type = InputType.RADIO, required = true, shortName = 'f')
 	private UISelectOne<ContentType> fileType;
 
 	@Inject
-	@WithAttributes(label = "Post Type")
+	@WithAttributes(label = "Post Type", shortName = 'p')
 	private UIInput<String> postType;
 
 	@Inject
-	@WithAttributes(label = "Post Tags")
+	@WithAttributes(label = "Post Tags", shortName = 'g')
 	private UIInput<String> postTags;
 
 	@Inject
-	@WithAttributes(label = "Post Status", type = InputType.RADIO)
+	@WithAttributes(label = "Post Status", type = InputType.RADIO, shortName = 's')
 	private UISelectOne<PublishType> postStatus;
 
 	@Override
@@ -76,13 +80,13 @@ public class NewPostWizard extends AbstractJBakeCommand {
 					.setItemLabelConverter(new Converter<PublishType, String>() {
 						@Override
 						public String convert(PublishType source) {
-							return source != null ? source.text() : null;
+							return source != null ? source.name() : null;
 						}
 					});
 		}
 
-		builder.add(postTitle).add(dateOfCreated).add(postType).add(postTags)
-				.add(fileType).add(postStatus);
+		builder.add(postTitle).add(targetDirectory).add(dateOfCreated)
+				.add(postType).add(postTags).add(fileType).add(postStatus);
 
 	}
 

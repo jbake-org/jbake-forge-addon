@@ -25,6 +25,7 @@ import org.jbake.forge.addon.types.PublishType;
 import org.jbake.forge.addon.ui.AbstractJBakeCommand;
 import org.jboss.forge.addon.convert.Converter;
 import org.jboss.forge.addon.facets.constraints.FacetConstraint;
+import org.jboss.forge.addon.projects.ProjectFactory;
 import org.jboss.forge.addon.ui.context.UIBuilder;
 import org.jboss.forge.addon.ui.context.UIContext;
 import org.jboss.forge.addon.ui.context.UIExecutionContext;
@@ -51,6 +52,10 @@ public class NewPageWizard extends AbstractJBakeCommand {
 	private UIInput<String> pageTitle;
 
 	@Inject
+	@WithAttributes(label = "Target Directory", type = InputType.DIRECTORY_PICKER)
+	private UIInput<String> targetDirectory;
+
+	@Inject
 	@WithAttributes(label = "File Type", type = InputType.RADIO, required = true)
 	private UISelectOne<ContentType> fileType;
 
@@ -70,13 +75,16 @@ public class NewPageWizard extends AbstractJBakeCommand {
 	@WithAttributes(label = "Page Status", type = InputType.RADIO, required = true)
 	private UISelectOne<PublishType> pageStatus;
 
+	@Inject
+	private ProjectFactory projectFactory;
+
 	@Override
 	public void initializeUI(final UIBuilder builder) throws Exception {
 
 		configureInputs(builder);
 
-		builder.add(pageTitle).add(dateOfCreated).add(pageType).add(pageTags)
-				.add(fileType).add(pageStatus);
+		builder.add(pageTitle).add(targetDirectory).add(dateOfCreated)
+				.add(pageType).add(pageTags).add(fileType).add(pageStatus);
 	}
 
 	@Override
@@ -98,7 +106,7 @@ public class NewPageWizard extends AbstractJBakeCommand {
 					.setItemLabelConverter(new Converter<PublishType, String>() {
 						@Override
 						public String convert(PublishType source) {
-							return source != null ? source.text() : null;
+							return source != null ? source.name() : null;
 						}
 					});
 		}
