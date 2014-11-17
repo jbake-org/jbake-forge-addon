@@ -16,25 +16,12 @@
 package org.jbake.forge.addon.types;
 
 /**
- * 
+ * Type for the state of the Publishing or draft of page or post.
  * 
  * @author Rajmahendra Hegde <rajmahendra@gmail.com>
  */
 public enum PublishType {
 
-    DRAFT("Draft"), PUBLISH("Published");
-
-    private String text;
-
-    PublishType() {
-    }
-
-    PublishType(String theText) {
-        text = theText;
-    }
-
-    public String text() {
-        return text;
-    }
+	Draft, Publish;
 
 }
