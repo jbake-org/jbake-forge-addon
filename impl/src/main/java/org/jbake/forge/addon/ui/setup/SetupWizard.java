@@ -41,17 +41,17 @@ import org.jboss.forge.addon.ui.util.Metadata;
  * @author Rajmahendra Hegde <rajmahendra@gmail.com>
  */
 
-public class JBakeSetupWizard extends AbstractJBakeCommand {
+public class SetupWizard extends AbstractJBakeCommand {
 
-	private static final Logger log = Logger.getLogger(JBakeSetupWizard.class
+	private static final Logger log = Logger.getLogger(SetupWizard.class
 			.getName());
 
 	@Inject
-	@WithAttributes(required = true, label = "JBake Version", defaultValue = "2.0")
+	@WithAttributes(required = true, label = "JBake Version", defaultValue = "2.0", shortName = 'v')
 	private UISelectOne<JBakeFacet> jbakeVersion;
 
 	@Inject
-	@WithAttributes(label = "Template Engine", type = InputType.RADIO, required = true)
+	@WithAttributes(label = "Template Engine", type = InputType.RADIO, required = true, shortName = 't')
 	private UISelectOne<TemplateType> templateEngine;
 
 	@Inject
