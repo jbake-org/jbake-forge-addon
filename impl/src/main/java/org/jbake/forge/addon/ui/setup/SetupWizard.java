@@ -22,7 +22,11 @@ import javax.inject.Inject;
 import org.jbake.forge.addon.facets.JBakeFacet;
 import org.jbake.forge.addon.types.TemplateType;
 import org.jbake.forge.addon.ui.AbstractJBakeCommand;
+import org.jboss.forge.addon.dependencies.Coordinate;
+import org.jboss.forge.addon.dependencies.builder.CoordinateBuilder;
 import org.jboss.forge.addon.facets.FacetFactory;
+import org.jboss.forge.addon.projects.Project;
+import org.jboss.forge.addon.projects.facets.MetadataFacet;
 import org.jboss.forge.addon.ui.context.UIBuilder;
 import org.jboss.forge.addon.ui.context.UIContext;
 import org.jboss.forge.addon.ui.context.UIExecutionContext;
@@ -46,6 +50,12 @@ public class SetupWizard extends AbstractJBakeCommand {
 	private static final Logger log = Logger.getLogger(SetupWizard.class
 			.getName());
 
+	private static final Coordinate JBAKE_MAVEN_PLUGIN_COORDINATE = CoordinateBuilder
+			.create().setGroupId("br.com.ingenieux")
+			.setArtifactId("jbake-maven-plugin");
+
+	Project project = null;
+
 	@Inject
 	@WithAttributes(required = true, label = "JBake Version", defaultValue = "2.0", shortName = 'v')
 	private UISelectOne<JBakeFacet> jbakeVersion;
@@ -65,6 +75,12 @@ public class SetupWizard extends AbstractJBakeCommand {
 
 	@Override
 	public Result execute(UIExecutionContext context) throws Exception {
+
+		project = getSelectedProject(context);
+
+		final MetadataFacet facet = project.getFacet(MetadataFacet.class);
+		facet.getProjectProvider();
+
 		if (facetFactory.install(getSelectedProject(context.getUIContext()),
 				jbakeVersion.getValue())) {
 			return Results.success("JBake has been installed.");
