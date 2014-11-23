@@ -27,6 +27,7 @@ import org.jboss.forge.addon.dependencies.builder.CoordinateBuilder;
 import org.jboss.forge.addon.facets.FacetFactory;
 import org.jboss.forge.addon.projects.Project;
 import org.jboss.forge.addon.projects.facets.MetadataFacet;
+import org.jboss.forge.addon.resource.ResourceFactory;
 import org.jboss.forge.addon.ui.context.UIBuilder;
 import org.jboss.forge.addon.ui.context.UIContext;
 import org.jboss.forge.addon.ui.context.UIExecutionContext;
@@ -66,6 +67,9 @@ public class SetupWizard extends AbstractJBakeCommand {
 
 	@Inject
 	private FacetFactory facetFactory;
+
+	@Inject
+	private ResourceFactory resourceFactory;
 
 	@Override
 	public void initializeUI(final UIBuilder builder) throws Exception {
