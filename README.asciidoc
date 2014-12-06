@@ -1,12 +1,10 @@
-== jbake-addon
+== JBoss Forge Addon for JBake
 :idprefix: id_ 
-(choose one, do not modify, then add a second sentence with a brief description, starting with - "The jbake-addon addon enables blah blah...)
-This addon provides *standalone* functionality, and *exports services* for use in other addons. 
-This addon provides *standalone* functionality.
-This addon *exports services* for use in other addons. 
-This addon *provides classes* for use in other addons. 
-This addon is a 'Furnace container' that provides *lifecycle* and *service registry* support for dependent addons.
-        
+
+This is a project to provide JBoss Forge Add-on for JBake project.
+
+      Currently this project is in-development.
+
 === Dependencies: None (or)
 === Depends on
 [options="header"]
