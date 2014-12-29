@@ -52,6 +52,7 @@
 			<groupId>org.jboss.forge.addon</groupId>
 			<artifactId>resources</artifactId>
 			<classifier>forge-addon</classifier>
+			<version>${version.furnace}</version>
 		</dependency>
 
 		<dependency>
