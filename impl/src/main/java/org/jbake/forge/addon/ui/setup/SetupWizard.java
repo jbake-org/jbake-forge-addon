@@ -82,8 +82,7 @@ public class SetupWizard extends AbstractJBakeCommand {
 
 		project = getSelectedProject(context);
 
-		final MetadataFacet facet = project.getFacet(MetadataFacet.class);
-		facet.getProjectProvider();
+
 
 		if (facetFactory.install(getSelectedProject(context.getUIContext()),
 				jbakeVersion.getValue())) {
