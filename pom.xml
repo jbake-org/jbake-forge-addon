@@ -14,9 +14,9 @@
 		<module>tests</module>
 	</modules>
 	<properties>
-		<version.furnace>2.12.2.Final</version.furnace>
+		<version.furnace>2.13.0.Final</version.furnace>
 		<maven.required.version>3.1</maven.required.version>
-		<javase.required.version>1.7</javase.required.version>
+		<javase.required.version>1.8</javase.required.version>
 	</properties>
 
 
