@@ -15,90 +15,102 @@
  */
 package org.jbake.forge.addon.facets;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import javax.inject.Inject;
-
 import org.jboss.forge.addon.dependencies.Dependency;
 import org.jboss.forge.addon.dependencies.builder.DependencyBuilder;
 import org.jboss.forge.addon.facets.AbstractFacet;
 import org.jboss.forge.addon.projects.Project;
 import org.jboss.forge.addon.projects.ProjectFacet;
+import org.jboss.forge.addon.projects.ProjectFactory;
 import org.jboss.forge.addon.projects.dependencies.DependencyInstaller;
 import org.jboss.forge.addon.projects.facets.DependencyFacet;
 
+
+import javax.inject.Inject;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+
 /**
- * 
- * 
  * @author Rajmahendra Hegde <rajmahendra@gmail.com>
  */
 public abstract class AbstractJBakeFacet extends AbstractFacet<Project>
-		implements ProjectFacet,JBakeFacet {
+        implements ProjectFacet, JBakeFacet {
 
-	protected static final Dependency JBAKE_DEPENDENCY = DependencyBuilder
-			.create().setGroupId("").setArtifactId("").setVersion("");
 
-	private final DependencyInstaller installer;
+    @Inject
+    private ProjectFactory projectFactory;
 
-	@Inject
-	public AbstractJBakeFacet(final DependencyInstaller installer) {
-		this.installer = installer;
-	}
+    protected static final Dependency JBAKE_DEPENDENCY = DependencyBuilder
+            .create().setGroupId("").setArtifactId("").setVersion("");
 
-	abstract protected Map<Dependency, List<Dependency>> getRequiredDependencyOptions();
+    private final DependencyInstaller installer;
 
-	@Override
-	public boolean install() {
-		addRequiredDependency();
-		return true;
-	}
+    @Inject
+    public AbstractJBakeFacet(final DependencyInstaller installer) {
+        this.installer = installer;
+    }
 
-	@Override
-	public boolean isInstalled() {
-		return isDependencyRequirementsMet();
-	}
+    abstract protected Map<Dependency, List<Dependency>> getRequiredDependencyOptions();
 
-	private void addRequiredDependency() {
-		boolean isInstalled = false;
-		DependencyFacet dependencyFacet = origin
-				.getFacet(DependencyFacet.class);
-		for (Entry<Dependency, List<Dependency>> group : getRequiredDependencyOptions()
-				.entrySet()) {
-			for (Dependency dependency : group.getValue()) {
-				if (dependencyFacet.hasEffectiveDependency(dependency)) {
-					isInstalled = true;
-					break;
-				}
-			}
-			if (!isInstalled) {
-				installer.installManaged(origin, JBAKE_DEPENDENCY);
-				installer.install(origin, group.getKey());
-			}
-		}
-	}
+    @Override
+    public boolean install() {
+        addRequiredDependency();
+        createJbakeFolderStructure();
+        return true;
+    }
 
-	protected boolean isDependencyRequirementsMet() {
-		DependencyFacet deps = origin.getFacet(DependencyFacet.class);
-		for (Entry<Dependency, List<Dependency>> group : getRequiredDependencyOptions()
-				.entrySet()) {
-			boolean satisfied = false;
-			for (Dependency dependency : group.getValue()) {
-				if (deps.hasEffectiveDependency(dependency)) {
-					satisfied = true;
-					break;
-				}
-			}
+    public abstract boolean createJbakeFolderStructure();
 
-			if (!satisfied)
-				return false;
-		}
-		return true;
-	}
-	
-	@Override
-	public String toString() {
-		return getSpecVersion().toString();
-	}
+    public abstract boolean isJbakeFolderCreated();
+
+    @Override
+    public boolean isInstalled() {
+        if (isDependencyRequirementsMet() && isJbakeFolderCreated())
+            return true;
+        else
+            return false;
+    }
+
+    private void addRequiredDependency() {
+        boolean isInstalled = false;
+        DependencyFacet dependencyFacet = origin
+                .getFacet(DependencyFacet.class);
+        for (Entry<Dependency, List<Dependency>> group : getRequiredDependencyOptions()
+                .entrySet()) {
+            for (Dependency dependency : group.getValue()) {
+                if (dependencyFacet.hasEffectiveDependency(dependency)) {
+                    isInstalled = true;
+                    break;
+                }
+            }
+            if (!isInstalled) {
+                installer.installManaged(origin, JBAKE_DEPENDENCY);
+                installer.install(origin, group.getKey());
+            }
+        }
+    }
+
+    protected boolean isDependencyRequirementsMet() {
+        DependencyFacet deps = origin.getFacet(DependencyFacet.class);
+        for (Entry<Dependency, List<Dependency>> group : getRequiredDependencyOptions()
+                .entrySet()) {
+            boolean satisfied = false;
+            for (Dependency dependency : group.getValue()) {
+                if (deps.hasEffectiveDependency(dependency)) {
+                    satisfied = true;
+                    break;
+                }
+            }
+
+            if (!satisfied)
+                return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return getSpecVersion().toString();
+    }
 }

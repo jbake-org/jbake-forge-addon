@@ -23,7 +23,10 @@ import javax.inject.Inject;
 
 import org.jbake.forge.addon.facets.AbstractJBakeFacet;
 import org.jboss.forge.addon.dependencies.Dependency;
+import org.jboss.forge.addon.maven.projects.MavenBuildSystem;
+import org.jboss.forge.addon.projects.Project;
 import org.jboss.forge.addon.projects.dependencies.DependencyInstaller;
+import org.jboss.forge.addon.resource.DirectoryResource;
 import org.jboss.forge.furnace.versions.SingleVersion;
 import org.jboss.forge.furnace.versions.Version;
 
@@ -35,6 +38,9 @@ import org.jboss.forge.furnace.versions.Version;
 public class JBakeFacetImpl_2_0 extends AbstractJBakeFacet {
 
 	@Inject
+	private MavenBuildSystem buildSystem;
+
+	@Inject
 	public JBakeFacetImpl_2_0(DependencyInstaller installer) {
 		super(installer);
 	}
@@ -43,6 +49,19 @@ public class JBakeFacetImpl_2_0 extends AbstractJBakeFacet {
 	protected Map<Dependency, List<Dependency>> getRequiredDependencyOptions() {
 		Map<Dependency, List<Dependency>> dependency = new HashMap<Dependency, List<Dependency>>();
 		return dependency;
+	}
+
+	@Override
+	public boolean createJbakeFolderStructure() {
+		Project selectedProject = getFaceted();
+		DirectoryResource directoryResource = (DirectoryResource)selectedProject.getRoot();
+		directoryResource.getOrCreateChildDirectory("src/main/Jbake");
+		return false;
+	}
+
+	@Override
+	public boolean isJbakeFolderCreated() {
+		return false;
 	}
 
 	@Override
