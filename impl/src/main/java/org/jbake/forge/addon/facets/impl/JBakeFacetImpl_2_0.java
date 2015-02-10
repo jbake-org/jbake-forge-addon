@@ -31,9 +31,10 @@ import org.jboss.forge.furnace.versions.SingleVersion;
 import org.jboss.forge.furnace.versions.Version;
 
 /**
- * 
- * 
+ *
+ *
  * @author Rajmahendra Hegde <rajmahendra@gmail.com>
+ * modified by @author Mani Manasa Mylavarapu <manimanasamylavarapu@gmail.com>
  */
 public class JBakeFacetImpl_2_0 extends AbstractJBakeFacet {
 
@@ -49,14 +50,6 @@ public class JBakeFacetImpl_2_0 extends AbstractJBakeFacet {
 	protected Map<Dependency, List<Dependency>> getRequiredDependencyOptions() {
 		Map<Dependency, List<Dependency>> dependency = new HashMap<Dependency, List<Dependency>>();
 		return dependency;
-	}
-
-	@Override
-	public boolean createJbakeFolderStructure() {
-		Project selectedProject = getFaceted();
-		DirectoryResource directoryResource = (DirectoryResource)selectedProject.getRoot();
-		directoryResource.getOrCreateChildDirectory("src/main/Jbake");
-		return false;
 	}
 
 	@Override

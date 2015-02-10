@@ -18,11 +18,13 @@ package org.jbake.forge.addon.facets;
 import org.jboss.forge.addon.dependencies.Dependency;
 import org.jboss.forge.addon.dependencies.builder.DependencyBuilder;
 import org.jboss.forge.addon.facets.AbstractFacet;
+import org.jboss.forge.addon.maven.projects.MavenFacet;
 import org.jboss.forge.addon.projects.Project;
 import org.jboss.forge.addon.projects.ProjectFacet;
 import org.jboss.forge.addon.projects.ProjectFactory;
 import org.jboss.forge.addon.projects.dependencies.DependencyInstaller;
 import org.jboss.forge.addon.projects.facets.DependencyFacet;
+import org.jboss.forge.addon.resource.DirectoryResource;
 
 
 import javax.inject.Inject;
@@ -33,16 +35,18 @@ import java.util.Map.Entry;
 
 /**
  * @author Rajmahendra Hegde <rajmahendra@gmail.com>
+ * modified by @author Mani Manasa Mylavarapu <manimanasamylavarapu@gmail.com>
  */
 public abstract class AbstractJBakeFacet extends AbstractFacet<Project>
         implements ProjectFacet, JBakeFacet {
-
-
     @Inject
     private ProjectFactory projectFactory;
 
-    protected static final Dependency JBAKE_DEPENDENCY = DependencyBuilder
-            .create().setGroupId("").setArtifactId("").setVersion("");
+    public static final Dependency JBAKE_POM_DEPENDENCY =
+            DependencyBuilder
+                    .create("br.com.ingenieux:jbake-maven-plugin")
+                    .setPackaging("pom")
+                    .setVersion("0.0.9");
 
     private final DependencyInstaller installer;
 
@@ -55,12 +59,17 @@ public abstract class AbstractJBakeFacet extends AbstractFacet<Project>
 
     @Override
     public boolean install() {
-        addRequiredDependency();
+        installMavenDependencies();
         createJbakeFolderStructure();
         return true;
     }
 
-    public abstract boolean createJbakeFolderStructure();
+    public boolean createJbakeFolderStructure() {
+        Project selectedProject = getFaceted();
+        DirectoryResource directoryResource = (DirectoryResource)selectedProject.getRoot();
+        directoryResource.getOrCreateChildDirectory("src/main/Jbake");
+        return true;
+    }
 
     public abstract boolean isJbakeFolderCreated();
 
@@ -71,7 +80,12 @@ public abstract class AbstractJBakeFacet extends AbstractFacet<Project>
         else
             return false;
     }
-
+    private void installMavenDependencies() {
+        this.installer.installManaged(getFaceted(), JBAKE_POM_DEPENDENCY);
+        /*  for (Dependency requiredDependency : getRequiredDependencies()) {
+            this.installer.install(getFaceted(), requiredDependency);
+        }*/
+    }
     private void addRequiredDependency() {
         boolean isInstalled = false;
         DependencyFacet dependencyFacet = origin
@@ -85,7 +99,7 @@ public abstract class AbstractJBakeFacet extends AbstractFacet<Project>
                 }
             }
             if (!isInstalled) {
-                installer.installManaged(origin, JBAKE_DEPENDENCY);
+                installer.installManaged(origin, JBAKE_POM_DEPENDENCY);
                 installer.install(origin, group.getKey());
             }
         }
