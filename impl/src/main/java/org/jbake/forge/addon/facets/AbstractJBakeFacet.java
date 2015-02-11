@@ -16,6 +16,7 @@
 package org.jbake.forge.addon.facets;
 
 import org.jboss.forge.addon.dependencies.Dependency;
+import org.jboss.forge.addon.dependencies.builder.CoordinateBuilder;
 import org.jboss.forge.addon.dependencies.builder.DependencyBuilder;
 import org.jboss.forge.addon.facets.AbstractFacet;
 import org.jboss.forge.addon.maven.projects.MavenFacet;
@@ -42,6 +43,11 @@ public abstract class AbstractJBakeFacet extends AbstractFacet<Project>
     @Inject
     private ProjectFactory projectFactory;
 
+    public static final Dependency JBAKE_CORE_DEPENDENCY =
+            DependencyBuilder
+                    .create("org.jbake:jbake-core").setVersion("2.3.2").
+                    addExclusion(CoordinateBuilder.create().setGroupId("org.eclipse.jetty").setArtifactId("jetty-server"));
+
     public static final Dependency JBAKE_POM_DEPENDENCY =
             DependencyBuilder
                     .create("br.com.ingenieux:jbake-maven-plugin")
@@ -60,9 +66,12 @@ public abstract class AbstractJBakeFacet extends AbstractFacet<Project>
     @Override
     public boolean install() {
         createJbakeFolderStructure();
+        installJbakeCoreDependencies();
         return true;
     }
-
+    private void installJbakeCoreDependencies() {
+        this.installer.install(getFaceted(), JBAKE_CORE_DEPENDENCY);
+    }
     public boolean createJbakeFolderStructure() {
         Project selectedProject = getFaceted();
         DirectoryResource directoryResource = (DirectoryResource) selectedProject.getRoot();
