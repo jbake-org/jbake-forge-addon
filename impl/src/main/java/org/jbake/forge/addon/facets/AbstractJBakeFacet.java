@@ -15,11 +15,17 @@
  */
 package org.jbake.forge.addon.facets;
 
+import org.jboss.forge.addon.dependencies.Coordinate;
 import org.jboss.forge.addon.dependencies.Dependency;
 import org.jboss.forge.addon.dependencies.builder.CoordinateBuilder;
 import org.jboss.forge.addon.dependencies.builder.DependencyBuilder;
 import org.jboss.forge.addon.facets.AbstractFacet;
+import org.jboss.forge.addon.maven.plugins.ExecutionBuilder;
+import org.jboss.forge.addon.maven.plugins.MavenPlugin;
+import org.jboss.forge.addon.maven.plugins.MavenPluginAdapter;
+import org.jboss.forge.addon.maven.plugins.MavenPluginBuilder;
 import org.jboss.forge.addon.maven.projects.MavenFacet;
+import org.jboss.forge.addon.maven.projects.MavenPluginFacet;
 import org.jboss.forge.addon.projects.Project;
 import org.jboss.forge.addon.projects.ProjectFacet;
 import org.jboss.forge.addon.projects.ProjectFactory;
@@ -67,7 +73,18 @@ public abstract class AbstractJBakeFacet extends AbstractFacet<Project>
     public boolean install() {
         createJbakeFolderStructure();
         installJbakeCoreDependencies();
+        installJBakeMavenPluginDependencies();
         return true;
+    }
+    private void installJBakeMavenPluginDependencies() {
+        Coordinate compiler = CoordinateBuilder.create("br.com.ingenieux:jbake-maven-plugin");
+        MavenPluginBuilder builder = MavenPluginBuilder.create()
+                .setCoordinate(compiler).addExecution(ExecutionBuilder.create().setId("default-generate").setPhase("generate-resources").addGoal("generate"));
+
+        MavenPlugin plugin = new MavenPluginAdapter(builder);
+
+        MavenPluginFacet pluginFacet = getFaceted().getFacet(MavenPluginFacet.class);
+        pluginFacet.addPlugin(plugin);
     }
     private void installJbakeCoreDependencies() {
         this.installer.install(getFaceted(), JBAKE_CORE_DEPENDENCY);
