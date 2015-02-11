@@ -66,8 +66,13 @@ public abstract class AbstractJBakeFacet extends AbstractFacet<Project>
 
     public boolean createJbakeFolderStructure() {
         Project selectedProject = getFaceted();
-        DirectoryResource directoryResource = (DirectoryResource)selectedProject.getRoot();
-        directoryResource.getOrCreateChildDirectory("src/main/Jbake");
+        DirectoryResource directoryResource = (DirectoryResource) selectedProject.getRoot();
+        directoryResource.getOrCreateChildDirectory("src");
+        directoryResource.getOrCreateChildDirectory("src/main");
+        directoryResource.getOrCreateChildDirectory("src/main/jbake");
+        directoryResource.getOrCreateChildDirectory("src/main/jbake/assets");
+        directoryResource.getOrCreateChildDirectory("src/main/jbake/content");
+        directoryResource.getOrCreateChildDirectory("src/main/jbake/templates");
         return true;
     }
 
