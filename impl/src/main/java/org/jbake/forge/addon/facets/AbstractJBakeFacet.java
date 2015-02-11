@@ -59,7 +59,6 @@ public abstract class AbstractJBakeFacet extends AbstractFacet<Project>
 
     @Override
     public boolean install() {
-        installMavenDependencies();
         createJbakeFolderStructure();
         return true;
     }
@@ -85,12 +84,7 @@ public abstract class AbstractJBakeFacet extends AbstractFacet<Project>
         else
             return false;
     }
-    private void installMavenDependencies() {
-        this.installer.installManaged(getFaceted(), JBAKE_POM_DEPENDENCY);
-        /*  for (Dependency requiredDependency : getRequiredDependencies()) {
-            this.installer.install(getFaceted(), requiredDependency);
-        }*/
-    }
+
     private void addRequiredDependency() {
         boolean isInstalled = false;
         DependencyFacet dependencyFacet = origin
