@@ -15,10 +15,14 @@
  */
 package org.jbake.forge.addon.facets;
 
+import org.jboss.forge.addon.dependencies.Coordinate;
 import org.jboss.forge.addon.dependencies.Dependency;
+import org.jboss.forge.addon.dependencies.builder.CoordinateBuilder;
 import org.jboss.forge.addon.dependencies.builder.DependencyBuilder;
 import org.jboss.forge.addon.facets.AbstractFacet;
+import org.jboss.forge.addon.maven.plugins.*;
 import org.jboss.forge.addon.maven.projects.MavenFacet;
+import org.jboss.forge.addon.maven.projects.MavenPluginFacet;
 import org.jboss.forge.addon.projects.Project;
 import org.jboss.forge.addon.projects.ProjectFacet;
 import org.jboss.forge.addon.projects.ProjectFactory;
@@ -42,6 +46,15 @@ public abstract class AbstractJBakeFacet extends AbstractFacet<Project>
     @Inject
     private ProjectFactory projectFactory;
 
+    public static final Dependency KUALI_MAVEN_DEPENDENCY =
+            DependencyBuilder
+                    .create("org.kuali.maven.plugins:wagon-maven-plugin").setVersion("1.0.3");
+
+    public static final Dependency JBAKE_CORE_DEPENDENCY =
+            DependencyBuilder
+                    .create("org.jbake:jbake-core").setVersion("2.3.2").
+                    addExclusion(CoordinateBuilder.create().setGroupId("org.eclipse.jetty").setArtifactId("jetty-server"));
+
     public static final Dependency JBAKE_POM_DEPENDENCY =
             DependencyBuilder
                     .create("br.com.ingenieux:jbake-maven-plugin")
@@ -59,15 +72,56 @@ public abstract class AbstractJBakeFacet extends AbstractFacet<Project>
 
     @Override
     public boolean install() {
-        installMavenDependencies();
         createJbakeFolderStructure();
+        installJbakeCoreDependencies();
+        installJBakeMavenPluginDependencies();
+        installMavenWarPluginDependencies();
+        installKualiMavenPluginDependencies();
         return true;
     }
+    private void installKualiMavenPluginDependencies() {
+        Coordinate compiler = CoordinateBuilder.create("org.kuali.maven.plugins:wagon-maven-plugin").setVersion("1.0.3");
+        MavenPluginBuilder builder = MavenPluginBuilder.create()
+                .setCoordinate(compiler).addExecution(ExecutionBuilder.create().addGoal("upload").setId("verify").setPhase("verify")).
+                        setConfiguration(ConfigurationBuilder.create().addConfigurationElement(ConfigurationElementBuilder.create().
+                                addChild("serverId").setText("jbakehome"))).addPluginDependency(KUALI_MAVEN_DEPENDENCY);
+        MavenPlugin plugin = new MavenPluginAdapter(builder);
 
+        MavenPluginFacet pluginFacet = getFaceted().getFacet(MavenPluginFacet.class);
+        pluginFacet.addPlugin(plugin);
+    }
+    private void installMavenWarPluginDependencies() {
+        Coordinate compiler = CoordinateBuilder.create("org.apache.maven.plugins:maven-war-plugin").setVersion("2.4");
+        MavenPluginBuilder builder = MavenPluginBuilder.create()
+                .setCoordinate(compiler);
+        MavenPlugin plugin = new MavenPluginAdapter(builder);
+
+        MavenPluginFacet pluginFacet = getFaceted().getFacet(MavenPluginFacet.class);
+        pluginFacet.addPlugin(plugin);
+
+    }
+    private void installJBakeMavenPluginDependencies() {
+        Coordinate compiler = CoordinateBuilder.create("br.com.ingenieux:jbake-maven-plugin");
+        MavenPluginBuilder builder = MavenPluginBuilder.create()
+                .setCoordinate(compiler).addExecution(ExecutionBuilder.create().setId("default-generate").setPhase("generate-resources").addGoal("generate"));
+
+        MavenPlugin plugin = new MavenPluginAdapter(builder);
+
+        MavenPluginFacet pluginFacet = getFaceted().getFacet(MavenPluginFacet.class);
+        pluginFacet.addPlugin(plugin);
+    }
+    private void installJbakeCoreDependencies() {
+        this.installer.install(getFaceted(), JBAKE_CORE_DEPENDENCY);
+    }
     public boolean createJbakeFolderStructure() {
         Project selectedProject = getFaceted();
-        DirectoryResource directoryResource = (DirectoryResource)selectedProject.getRoot();
-        directoryResource.getOrCreateChildDirectory("src/main/Jbake");
+        DirectoryResource directoryResource = (DirectoryResource) selectedProject.getRoot();
+        directoryResource.getOrCreateChildDirectory("src");
+        directoryResource.getOrCreateChildDirectory("src/main");
+        directoryResource.getOrCreateChildDirectory("src/main/jbake");
+        directoryResource.getOrCreateChildDirectory("src/main/jbake/assets");
+        directoryResource.getOrCreateChildDirectory("src/main/jbake/content");
+        directoryResource.getOrCreateChildDirectory("src/main/jbake/templates");
         return true;
     }
 
@@ -80,12 +134,7 @@ public abstract class AbstractJBakeFacet extends AbstractFacet<Project>
         else
             return false;
     }
-    private void installMavenDependencies() {
-        this.installer.installManaged(getFaceted(), JBAKE_POM_DEPENDENCY);
-        /*  for (Dependency requiredDependency : getRequiredDependencies()) {
-            this.installer.install(getFaceted(), requiredDependency);
-        }*/
-    }
+
     private void addRequiredDependency() {
         boolean isInstalled = false;
         DependencyFacet dependencyFacet = origin
