@@ -20,10 +20,7 @@ import org.jboss.forge.addon.dependencies.Dependency;
 import org.jboss.forge.addon.dependencies.builder.CoordinateBuilder;
 import org.jboss.forge.addon.dependencies.builder.DependencyBuilder;
 import org.jboss.forge.addon.facets.AbstractFacet;
-import org.jboss.forge.addon.maven.plugins.ExecutionBuilder;
-import org.jboss.forge.addon.maven.plugins.MavenPlugin;
-import org.jboss.forge.addon.maven.plugins.MavenPluginAdapter;
-import org.jboss.forge.addon.maven.plugins.MavenPluginBuilder;
+import org.jboss.forge.addon.maven.plugins.*;
 import org.jboss.forge.addon.maven.projects.MavenFacet;
 import org.jboss.forge.addon.maven.projects.MavenPluginFacet;
 import org.jboss.forge.addon.projects.Project;
@@ -48,6 +45,10 @@ public abstract class AbstractJBakeFacet extends AbstractFacet<Project>
         implements ProjectFacet, JBakeFacet {
     @Inject
     private ProjectFactory projectFactory;
+
+    public static final Dependency KUALI_MAVEN_DEPENDENCY =
+            DependencyBuilder
+                    .create("org.kuali.maven.plugins:wagon-maven-plugin").setVersion("1.0.3");
 
     public static final Dependency JBAKE_CORE_DEPENDENCY =
             DependencyBuilder
@@ -75,7 +76,19 @@ public abstract class AbstractJBakeFacet extends AbstractFacet<Project>
         installJbakeCoreDependencies();
         installJBakeMavenPluginDependencies();
         installMavenWarPluginDependencies();
+        installKualiMavenPluginDependencies();
         return true;
+    }
+    private void installKualiMavenPluginDependencies() {
+        Coordinate compiler = CoordinateBuilder.create("org.kuali.maven.plugins:wagon-maven-plugin").setVersion("1.0.3");
+        MavenPluginBuilder builder = MavenPluginBuilder.create()
+                .setCoordinate(compiler).addExecution(ExecutionBuilder.create().addGoal("upload").setId("verify").setPhase("verify")).
+                        setConfiguration(ConfigurationBuilder.create().addConfigurationElement(ConfigurationElementBuilder.create().
+                                addChild("serverId").setText("jbakehome"))).addPluginDependency(KUALI_MAVEN_DEPENDENCY);
+        MavenPlugin plugin = new MavenPluginAdapter(builder);
+
+        MavenPluginFacet pluginFacet = getFaceted().getFacet(MavenPluginFacet.class);
+        pluginFacet.addPlugin(plugin);
     }
     private void installMavenWarPluginDependencies() {
         Coordinate compiler = CoordinateBuilder.create("org.apache.maven.plugins:maven-war-plugin").setVersion("2.4");
