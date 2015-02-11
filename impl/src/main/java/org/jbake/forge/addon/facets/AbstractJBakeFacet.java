@@ -74,7 +74,18 @@ public abstract class AbstractJBakeFacet extends AbstractFacet<Project>
         createJbakeFolderStructure();
         installJbakeCoreDependencies();
         installJBakeMavenPluginDependencies();
+        installMavenWarPluginDependencies();
         return true;
+    }
+    private void installMavenWarPluginDependencies() {
+        Coordinate compiler = CoordinateBuilder.create("org.apache.maven.plugins:maven-war-plugin").setVersion("2.4");
+        MavenPluginBuilder builder = MavenPluginBuilder.create()
+                .setCoordinate(compiler);
+        MavenPlugin plugin = new MavenPluginAdapter(builder);
+
+        MavenPluginFacet pluginFacet = getFaceted().getFacet(MavenPluginFacet.class);
+        pluginFacet.addPlugin(plugin);
+
     }
     private void installJBakeMavenPluginDependencies() {
         Coordinate compiler = CoordinateBuilder.create("br.com.ingenieux:jbake-maven-plugin");
