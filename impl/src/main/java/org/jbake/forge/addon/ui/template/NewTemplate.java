@@ -19,9 +19,11 @@ import java.util.logging.Logger;
 
 import javax.inject.Inject;
 
+import org.jbake.forge.addon.facets.JBakeFacet;
 import org.jbake.forge.addon.types.TemplateType;
 import org.jbake.forge.addon.ui.AbstractJBakeCommand;
 import org.jboss.forge.addon.facets.FacetFactory;
+import org.jboss.forge.addon.facets.constraints.FacetConstraint;
 import org.jboss.forge.addon.projects.Project;
 import org.jboss.forge.addon.ui.context.UIBuilder;
 import org.jboss.forge.addon.ui.context.UIContext;
@@ -36,12 +38,14 @@ import org.jboss.forge.addon.ui.result.Results;
 import org.jboss.forge.addon.ui.util.Categories;
 import org.jboss.forge.addon.ui.util.Metadata;
 
+import static org.jbake.forge.addon.utils.MessageUtil.properties;
+
 /**
  * Command for creating new Template for JBake
  * 
  * @author Rajmahendra Hegde <rajmahendra@gmail.com>
  */
-
+@FacetConstraint({ JBakeFacet.class })
 public class NewTemplate extends AbstractJBakeCommand {
 
 	private static final Logger log = Logger.getLogger(NewTemplate.class
@@ -69,18 +73,18 @@ public class NewTemplate extends AbstractJBakeCommand {
 	@Override
 	public Result execute(UIExecutionContext context) throws Exception {
 
-		return Results.success("Template file is created.");
+		return Results.success(properties.getMessage("template.create.success"));
 	}
 
 	@Override
 	public UICommandMetadata getMetadata(UIContext context) {
 		return Metadata
 				.from(super.getMetadata(context), getClass())
-				.name("JBake: New Template")
-				.description("Create a new Template file")
+                .name(properties.getMetadataValue("template.name"))
+                .description(properties.getMetadataValue("template.description"))
 				.category(
 						Categories.create(super.getMetadata(context)
-								.getCategory(), "JBake"));
+								.getCategory(), properties.getKeyValue("jbakeName")));
 	}
 
 	@Override

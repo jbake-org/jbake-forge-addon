@@ -26,7 +26,7 @@ import java.util.ResourceBundle;
 public final class MessageUtil {
 
     /** The Constant INSTANCE. */
-    public static final MessageUtil INSTANCE = new MessageUtil();
+    public static final MessageUtil properties = new MessageUtil();
 
     /** The bundle. */
     private final ResourceBundle bundle;
@@ -56,6 +56,16 @@ public final class MessageUtil {
      */
     public String getMessage(final String key) {
         return bundle.getString("message." + key);
+    }
+
+    /**
+     * Gets the metadata value.
+     *
+     * @param key the key
+     * @return the message
+     */
+    public String getMetadataValue(final String key) {
+        return bundle.getString("metadata." + key);
     }
 
     /**

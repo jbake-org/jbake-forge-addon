@@ -38,7 +38,7 @@ public enum TemplateType {
 	}
 
 	public String toString() {
-		return extn;
+		return name();
 	}
 
 }

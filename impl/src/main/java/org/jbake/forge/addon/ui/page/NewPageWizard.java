@@ -38,7 +38,7 @@ import org.jboss.forge.addon.ui.result.Result;
 import org.jboss.forge.addon.ui.result.Results;
 import org.jboss.forge.addon.ui.util.Categories;
 import org.jboss.forge.addon.ui.util.Metadata;
-
+import static org.jbake.forge.addon.utils.MessageUtil.properties;
 /**
  * 
  * 
@@ -89,7 +89,7 @@ public class NewPageWizard extends AbstractJBakeCommand {
 
 	@Override
 	public Result execute(UIExecutionContext context) throws Exception {
-		return Results.success("The Page Is Created.");
+		return Results.success(properties.getMessage("page.create.success"));
 	}
 
 	@Override
@@ -117,11 +117,11 @@ public class NewPageWizard extends AbstractJBakeCommand {
 	public UICommandMetadata getMetadata(UIContext context) {
 		return Metadata
 				.from(super.getMetadata(context), getClass())
-				.name("JBake: New Page")
-				.description("Creates a new Page")
+				.name(properties.getMetadataValue("page.name"))
+				.description(properties.getMetadataValue("page.description"))
 				.category(
 						Categories.create(super.getMetadata(context)
-								.getCategory(), "JBake"));
+								.getCategory(),  properties.getKeyValue("jbakeName")));
 	}
 
 }

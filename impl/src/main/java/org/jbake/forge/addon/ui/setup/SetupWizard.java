@@ -15,10 +15,6 @@
  */
 package org.jbake.forge.addon.ui.setup;
 
-import java.util.logging.Logger;
-
-import javax.inject.Inject;
-
 import org.jbake.forge.addon.facets.JBakeFacet;
 import org.jbake.forge.addon.types.TemplateType;
 import org.jbake.forge.addon.ui.AbstractJBakeCommand;
@@ -26,7 +22,6 @@ import org.jboss.forge.addon.dependencies.Coordinate;
 import org.jboss.forge.addon.dependencies.builder.CoordinateBuilder;
 import org.jboss.forge.addon.facets.FacetFactory;
 import org.jboss.forge.addon.projects.Project;
-import org.jboss.forge.addon.projects.facets.MetadataFacet;
 import org.jboss.forge.addon.resource.ResourceFactory;
 import org.jboss.forge.addon.ui.context.UIBuilder;
 import org.jboss.forge.addon.ui.context.UIContext;
@@ -40,71 +35,71 @@ import org.jboss.forge.addon.ui.result.Results;
 import org.jboss.forge.addon.ui.util.Categories;
 import org.jboss.forge.addon.ui.util.Metadata;
 
+import javax.inject.Inject;
+import java.util.logging.Logger;
+
+import static org.jbake.forge.addon.utils.MessageUtil.properties;
+
 /**
- * 
- * 
  * @author Rajmahendra Hegde <rajmahendra@gmail.com>
  */
 
 public class SetupWizard extends AbstractJBakeCommand {
 
-	private static final Logger log = Logger.getLogger(SetupWizard.class
-			.getName());
+    private static final Logger log = Logger.getLogger(SetupWizard.class
+            .getName());
 
-	private static final Coordinate JBAKE_MAVEN_PLUGIN_COORDINATE = CoordinateBuilder
-			.create().setGroupId("br.com.ingenieux")
-			.setArtifactId("jbake-maven-plugin");
+    private static final Coordinate JBAKE_MAVEN_PLUGIN_COORDINATE = CoordinateBuilder
+            .create().setGroupId("br.com.ingenieux")
+            .setArtifactId("jbake-maven-plugin");
 
-	Project project = null;
+    Project project = null;
 
-	@Inject
-	@WithAttributes(required = true, label = "JBake Version", defaultValue = "2.0", shortName = 'v')
-	private UISelectOne<JBakeFacet> jbakeVersion;
+    @Inject
+    @WithAttributes(required = true, label = "JBake Version", defaultValue = "2.0", shortName = 'v')
+    private UISelectOne<JBakeFacet> jbakeVersion;
 
-	@Inject
-	@WithAttributes(label = "Template Engine", type = InputType.RADIO, required = true, shortName = 't')
-	private UISelectOne<TemplateType> templateEngine;
+    @Inject
+    @WithAttributes(label = "Template Engine", type = InputType.RADIO, required = true, shortName = 't')
+    private UISelectOne<TemplateType> templateEngine;
 
-	@Inject
-	private FacetFactory facetFactory;
+    @Inject
+    private FacetFactory facetFactory;
 
-	@Inject
-	private ResourceFactory resourceFactory;
+    @Inject
+    private ResourceFactory resourceFactory;
 
-	@Override
-	public void initializeUI(final UIBuilder builder) throws Exception {
-		builder.add(jbakeVersion).add(templateEngine);
+    @Override
+    public void initializeUI(final UIBuilder builder) throws Exception {
+        builder.add(jbakeVersion).add(templateEngine);
 
-	}
+    }
 
-	@Override
-	public Result execute(UIExecutionContext context) throws Exception {
+    @Override
+    public Result execute(UIExecutionContext context) throws Exception {
+        project = getSelectedProject(context);
 
-		project = getSelectedProject(context);
+        if (facetFactory.install(getSelectedProject(context.getUIContext()),
+                jbakeVersion.getValue())) {
+            return Results.success(properties.getMessage("plugin.install.success"));
+        }
+        return Results.fail(properties.getMessage("plugin.install.failure"));
+    }
 
+    @Override
+    public UICommandMetadata getMetadata(UIContext context) {
+        return Metadata
+                .from(super.getMetadata(context), getClass())
+                .name(properties.getMetadataValue("setup.name"))
+                .description(properties.getMetadataValue("setup.description"))
+                .category(
+                        Categories.create(super.getMetadata(context)
+                                .getCategory(),  properties.getKeyValue("jbakeName")));
+    }
 
-
-		if (facetFactory.install(getSelectedProject(context.getUIContext()),
-				jbakeVersion.getValue())) {
-			return Results.success("JBake has been installed.");
-		}
-		return Results.fail("Could not install JBake.");
-	}
-
-	@Override
-	public UICommandMetadata getMetadata(UIContext context) {
-		return Metadata
-				.from(super.getMetadata(context), getClass())
-				.name("JBake: Setup Project")
-				.description("Setup a JBake project")
-				.category(
-						Categories.create(super.getMetadata(context)
-								.getCategory(), "JBake"));
-	}
-
-	@Override
-	protected boolean isProjectRequired() {
-		return true;
-	}
+    @Override
+    protected boolean isProjectRequired() {
+        return true;
+    }
 
 }

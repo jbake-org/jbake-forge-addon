@@ -36,6 +36,8 @@ import org.jboss.forge.addon.ui.result.Results;
 import org.jboss.forge.addon.ui.util.Categories;
 import org.jboss.forge.addon.ui.util.Metadata;
 
+import static org.jbake.forge.addon.utils.MessageUtil.properties;
+
 /**
  * 
  * 
@@ -92,7 +94,7 @@ public class NewPostWizard extends AbstractJBakeCommand {
 
 	@Override
 	public Result execute(UIExecutionContext context) throws Exception {
-		return Results.success("The Post Is Created.");
+		return Results.success(properties.getMessage("post.create.success"));
 	}
 
 	@Override
@@ -105,11 +107,11 @@ public class NewPostWizard extends AbstractJBakeCommand {
 	public UICommandMetadata getMetadata(UIContext context) {
 		return Metadata
 				.from(super.getMetadata(context), getClass())
-				.name("JBake: New Post")
-				.description("Creates a new Post")
+                .name(properties.getMetadataValue("post.name"))
+                .description(properties.getMetadataValue("post.description"))
 				.category(
 						Categories.create(super.getMetadata(context)
-								.getCategory(), "JBake"));
+								.getCategory(),  properties.getKeyValue("jbakeName")));
 	}
 
 }
