@@ -23,10 +23,11 @@ import java.util.ResourceBundle;
  * @author Rajmahendra Hegde <rajmahendra@gmail.com>
  * 
  */
-public final class MessageUtil {
+public enum MessageUtil {
 
     /** The Constant INSTANCE. */
-    public static final MessageUtil properties = new MessageUtil();
+   // public static final MessageUtil properties = new MessageUtil();
+    properties;
 
     /** The bundle. */
     private final ResourceBundle bundle;
