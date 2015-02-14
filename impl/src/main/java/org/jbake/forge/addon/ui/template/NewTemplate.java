@@ -83,8 +83,8 @@ public class NewTemplate extends AbstractJBakeCommand {
                 .name(properties.getMetadataValue("template.name"))
                 .description(properties.getMetadataValue("template.description"))
 				.category(
-						Categories.create(super.getMetadata(context)
-								.getCategory(), properties.getKeyValue("jbakeName")));
+                        Categories.create(super.getMetadata(context)
+                                .getCategory(), properties.getKeyValue("jbakeName")));
 	}
 
 	@Override
