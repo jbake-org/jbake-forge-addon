@@ -56,11 +56,11 @@ public class SetupWizard extends AbstractJBakeCommand {
     Project project = null;
 
     @Inject
-    @WithAttributes(required = true, label = "JBake Version", defaultValue = "2.0", shortName = 'v')
+    @WithAttributes(required = true, label = "JBake Version", defaultValue = "2.0", shortName = 'v', description = "JBake Version")
     private UISelectOne<JBakeFacet> jbakeVersion;
 
     @Inject
-    @WithAttributes(label = "Template Engine", type = InputType.RADIO, required = true, shortName = 't')
+    @WithAttributes(label = "Template Engine", type = InputType.RADIO, required = true, shortName = 't', description = "Template engine to be used for Templates")
     private UISelectOne<TemplateType> templateEngine;
 
     @Inject

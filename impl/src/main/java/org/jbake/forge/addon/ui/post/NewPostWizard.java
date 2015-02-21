@@ -47,31 +47,31 @@ import static org.jbake.forge.addon.utils.MessageUtil.properties;
 public class NewPostWizard extends AbstractJBakeCommand {
 
 	@Inject
-	@WithAttributes(label = "Post Title", required = true, shortName = 't')
+	@WithAttributes(label = "Post Title", required = true, shortName = 't', description = "Post title")
 	private UIInput<String> postTitle;
 
 	@Inject
-	@WithAttributes(label = "Target Directory", type = InputType.DIRECTORY_PICKER, shortName = 'd')
+	@WithAttributes(label = "Target Directory", type = InputType.DIRECTORY_PICKER, shortName = 'p', description = "Path of the post")
 	private UIInput<String> targetDirectory;
 
 	@Inject
-	@WithAttributes(label = "Date of Created/Modified", shortName = 'c')
+	@WithAttributes(label = "Date of Created/Modified", shortName = 'd', description = "Date of creation for the post")
 	private UIInput<String> dateOfCreated;
 
 	@Inject
-	@WithAttributes(label = "File Type", type = InputType.RADIO, required = true, shortName = 'f')
+	@WithAttributes(label = "File Type", type = InputType.RADIO, required = true, shortName = 'c', description = "Post content type")
 	private UISelectOne<ContentType> fileType;
 
 	@Inject
-	@WithAttributes(label = "Post Type", shortName = 'p')
-	private UIInput<String> postType;
+	@WithAttributes(label = "Post Type", shortName = 'e', description = "Template to be used")
+	private UIInput<String> templateType;
 
 	@Inject
-	@WithAttributes(label = "Post Tags", shortName = 'g')
+	@WithAttributes(label = "Post Tags", defaultValue = "post", shortName = 't', description = "Tag names in comma separated")
 	private UIInput<String> postTags;
 
 	@Inject
-	@WithAttributes(label = "Post Status", type = InputType.RADIO, shortName = 's')
+	@WithAttributes(label = "Post Status", type = InputType.RADIO,  shortName = 's', description = "Post status Draft/Published")
 	private UISelectOne<PublishType> postStatus;
 
 	@Override
@@ -88,7 +88,7 @@ public class NewPostWizard extends AbstractJBakeCommand {
 		}
 
 		builder.add(postTitle).add(targetDirectory).add(dateOfCreated)
-				.add(postType).add(postTags).add(fileType).add(postStatus);
+				.add(templateType).add(postTags).add(fileType).add(postStatus);
 
 	}
 
