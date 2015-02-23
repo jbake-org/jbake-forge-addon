@@ -42,6 +42,7 @@ import static org.jbake.forge.addon.utils.MessageUtil.properties;
 
 /**
  * @author Rajmahendra Hegde <rajmahendra@gmail.com>
+ * modified @author Mani Manasa Mylavarapu
  */
 
 public class SetupWizard extends AbstractJBakeCommand {
