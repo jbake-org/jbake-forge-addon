@@ -20,6 +20,6 @@ package org.jbake.forge.addon.utils;
  * 
  * @author Rajmahendra Hegde <rajmahendra@gmail.com>
  */
-public class UIValidatorProvider {
+public class TemplateUtil {
 
 }
