@@ -48,31 +48,31 @@ import static org.jbake.forge.addon.utils.MessageUtil.properties;
 public class NewPageWizard extends AbstractJBakeCommand {
 
 	@Inject
-	@WithAttributes(label = "Page Title", required = true)
+	@WithAttributes(label = "Page Title", required = true, shortName = 'l', description = "Page title")
 	private UIInput<String> pageTitle;
 
 	@Inject
-	@WithAttributes(label = "Target Directory", type = InputType.DIRECTORY_PICKER)
+	@WithAttributes(label = "Target Directory", type = InputType.DIRECTORY_PICKER, shortName = 'p', description = "Location of the page")
 	private UIInput<String> targetDirectory;
 
 	@Inject
-	@WithAttributes(label = "File Type", type = InputType.RADIO, required = true)
+	@WithAttributes(label = "File Type", type = InputType.RADIO, required = true, shortName = 'c', description = "Page content type")
 	private UISelectOne<ContentType> fileType;
 
 	@Inject
-	@WithAttributes(label = "Date of Created/Modified")
+	@WithAttributes(label = "Date of Created/Modified", shortName = 'd', description = "Date of creation for the Page")
 	private UIInput<String> dateOfCreated;
 
 	@Inject
-	@WithAttributes(label = "Page Type", required = true)
-	private UIInput<String> pageType;
+	@WithAttributes(label = "Template Type", required = true, shortName = 'e', description = "Template to be used")
+	private UIInput<String> templateType;
 
 	@Inject
-	@WithAttributes(label = "Page Tags")
+	@WithAttributes(label = "Page Tags", defaultValue = "page", shortName = 't', description = "Tag names in comma separated")
 	private UIInput<String> pageTags;
 
 	@Inject
-	@WithAttributes(label = "Page Status", type = InputType.RADIO, required = true)
+	@WithAttributes(label = "Page Status", type = InputType.RADIO,defaultValue ="Draft" ,required = true, shortName = 's', description = "Page status Draft/Published")
 	private UISelectOne<PublishType> pageStatus;
 
 	@Inject
@@ -84,7 +84,7 @@ public class NewPageWizard extends AbstractJBakeCommand {
 		configureInputs(builder);
 
 		builder.add(pageTitle).add(targetDirectory).add(dateOfCreated)
-				.add(pageType).add(pageTags).add(fileType).add(pageStatus);
+				.add(templateType).add(pageTags).add(fileType).add(pageStatus);
 	}
 
 	@Override
