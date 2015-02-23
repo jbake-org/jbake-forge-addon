@@ -15,11 +15,27 @@
  */
 package org.jbake.forge.addon.utils;
 
+import org.jbake.forge.addon.types.TemplateType;
+import org.jboss.forge.addon.projects.Project;
+import org.jboss.forge.addon.resource.DirectoryResource;
+import org.jboss.forge.addon.resource.FileResource;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
+
 /**
- * 
+ * Template utility calls to handle template files related to JBake
  * 
  * @author Rajmahendra Hegde <rajmahendra@gmail.com>
  */
-public class TemplateUtil {
+public final class TemplateUtil {
+
+    public static final String TEMPLATE_PROJECT_FOLDER = "/templates/project/";
+
+
 
 }
