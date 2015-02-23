@@ -1,0 +1,7 @@
+= Project Structure
+Jonathan Bullock
+2013-10-17
+:jbake-type: page
+:jbake-tags: documentation, manual
+:jbake-status: published
+
