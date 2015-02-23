@@ -72,24 +72,5 @@
 			<artifactId>jbake-addon-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.jbake</groupId>
-			<artifactId>jbake-core</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>org.eclipse.jetty</groupId>
-					<artifactId>jetty-server</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
 	</dependencies>
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.jbake</groupId>
-				<artifactId>jbake-core</artifactId>
-				<version>2.3.2</version>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
 </project>
