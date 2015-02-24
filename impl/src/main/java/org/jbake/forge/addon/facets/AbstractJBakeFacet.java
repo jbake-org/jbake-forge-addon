@@ -15,6 +15,7 @@
  */
 package org.jbake.forge.addon.facets;
 
+import org.jbake.forge.addon.utils.TemplateUtil;
 import org.jboss.forge.addon.dependencies.Coordinate;
 import org.jboss.forge.addon.dependencies.Dependency;
 import org.jboss.forge.addon.dependencies.builder.CoordinateBuilder;
@@ -31,9 +32,13 @@ import org.jboss.forge.addon.resource.DirectoryResource;
 
 
 import javax.inject.Inject;
+import java.io.*;
+import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 
 /**
@@ -42,6 +47,7 @@ import java.util.Map.Entry;
  */
 public abstract class AbstractJBakeFacet extends AbstractFacet<Project>
         implements ProjectFacet, JBakeFacet {
+
     public static final Dependency KUALI_MAVEN_DEPENDENCY =
             DependencyBuilder
                     .create("org.kuali.maven.plugins:wagon-maven-plugin").setVersion("1.0.3");
@@ -67,7 +73,11 @@ public abstract class AbstractJBakeFacet extends AbstractFacet<Project>
 
     @Override
     public boolean install() {
-        createJbakeFolderStructure();
+        try {
+            createJbakeFolderStructure();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         installJbakeCoreDependencies();
         installMavenPluginDependencies();
         return true;
@@ -96,13 +106,14 @@ public abstract class AbstractJBakeFacet extends AbstractFacet<Project>
         this.installer.install(getFaceted(), JBAKE_CORE_DEPENDENCY);
     }
 
-    public void createJbakeFolderStructure() {
+    public void createJbakeFolderStructure() throws IOException {
+       String zipType="freemarker";
         Project selectedProject = getFaceted();
         DirectoryResource directoryResource = (DirectoryResource) selectedProject.getRoot();
-        directoryResource.getOrCreateChildDirectory("src/main/jbake");
-        directoryResource.getOrCreateChildDirectory("src/main/jbake/assets");
-        directoryResource.getOrCreateChildDirectory("src/main/jbake/content");
-        directoryResource.getOrCreateChildDirectory("src/main/jbake/templates");
+        File codeFolder = directoryResource.getUnderlyingResourceObject();
+        String outputFilePath=codeFolder.getCanonicalPath()+"/src/main/jbake";
+        TemplateUtil.unzip(zipType, outputFilePath);
+
     }
 
     public abstract boolean isJbakeFolderCreated();
