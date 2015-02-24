@@ -24,6 +24,7 @@ import java.util.zip.ZipInputStream;
  * Template utility calls to handle template files related to JBake
  *
  * @author Rajmahendra Hegde <rajmahendra@gmail.com>
+ * modified by @author Mani Manasa Mylavarapu <manimanasamylavarapu@gmail.com>
  */
 public final class TemplateUtil {
     /**
