@@ -20,10 +20,12 @@ import org.jboss.forge.furnace.versions.Version;
 
 /**
  * JBake Facet.
- * 
+ *
  * @author Rajmahendra Hegde <rajmahendra@gmail.com>
  */
 
 public interface JBakeFacet extends ProjectFacet {
-	    Version getSpecVersion();
+    Version getSpecVersion();
+    String getTemplateType();
+    void setTemplateType(String templateType);
 }

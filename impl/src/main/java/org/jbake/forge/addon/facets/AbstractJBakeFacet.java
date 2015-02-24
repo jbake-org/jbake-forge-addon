@@ -15,12 +15,16 @@
  */
 package org.jbake.forge.addon.facets;
 
+import org.jbake.forge.addon.utils.TemplateUtil;
 import org.jboss.forge.addon.dependencies.Coordinate;
 import org.jboss.forge.addon.dependencies.Dependency;
 import org.jboss.forge.addon.dependencies.builder.CoordinateBuilder;
 import org.jboss.forge.addon.dependencies.builder.DependencyBuilder;
 import org.jboss.forge.addon.facets.AbstractFacet;
-import org.jboss.forge.addon.maven.plugins.*;
+import org.jboss.forge.addon.maven.plugins.ExecutionBuilder;
+import org.jboss.forge.addon.maven.plugins.MavenPlugin;
+import org.jboss.forge.addon.maven.plugins.MavenPluginAdapter;
+import org.jboss.forge.addon.maven.plugins.MavenPluginBuilder;
 import org.jboss.forge.addon.maven.projects.MavenPluginFacet;
 import org.jboss.forge.addon.projects.Project;
 import org.jboss.forge.addon.projects.ProjectFacet;
@@ -29,8 +33,9 @@ import org.jboss.forge.addon.projects.dependencies.DependencyInstaller;
 import org.jboss.forge.addon.projects.facets.DependencyFacet;
 import org.jboss.forge.addon.resource.DirectoryResource;
 
-
 import javax.inject.Inject;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -42,6 +47,7 @@ import java.util.Map.Entry;
  */
 public abstract class AbstractJBakeFacet extends AbstractFacet<Project>
         implements ProjectFacet, JBakeFacet {
+    public String templateType;
     public static final Dependency KUALI_MAVEN_DEPENDENCY =
             DependencyBuilder
                     .create("org.kuali.maven.plugins:wagon-maven-plugin").setVersion("1.0.3");
@@ -66,8 +72,22 @@ public abstract class AbstractJBakeFacet extends AbstractFacet<Project>
     abstract protected Map<Dependency, List<Dependency>> getRequiredDependencyOptions();
 
     @Override
+    public String getTemplateType() {
+        return templateType;
+    }
+
+    @Override
+    public void setTemplateType(String templateType) {
+        this.templateType = templateType;
+    }
+
+    @Override
     public boolean install() {
-        createJbakeFolderStructure();
+        try {
+            createJbakeFolderStructure();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         installJbakeCoreDependencies();
         installMavenPluginDependencies();
         return true;
@@ -96,13 +116,14 @@ public abstract class AbstractJBakeFacet extends AbstractFacet<Project>
         this.installer.install(getFaceted(), JBAKE_CORE_DEPENDENCY);
     }
 
-    public void createJbakeFolderStructure() {
+    public void createJbakeFolderStructure() throws IOException {
+        String zipType = getTemplateType();
         Project selectedProject = getFaceted();
         DirectoryResource directoryResource = (DirectoryResource) selectedProject.getRoot();
-        directoryResource.getOrCreateChildDirectory("src/main/jbake");
-        directoryResource.getOrCreateChildDirectory("src/main/jbake/assets");
-        directoryResource.getOrCreateChildDirectory("src/main/jbake/content");
-        directoryResource.getOrCreateChildDirectory("src/main/jbake/templates");
+        File codeFolder = directoryResource.getUnderlyingResourceObject();
+        String outputFilePath = codeFolder.getCanonicalPath() + "/src/main/jbake";
+        TemplateUtil.unzip(zipType, outputFilePath);
+
     }
 
     public abstract boolean isJbakeFolderCreated();
