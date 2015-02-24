@@ -44,7 +44,7 @@ public final class TemplateUtil {
      */
     public static void unzip(String zipType, String destDirectory) throws IOException {
          File destDir = new File(destDirectory);
-        URL checkStyleXmlSourceUrl = TemplateUtil.class.getResource(TemplateUtil.TEMPLATE_PROJECT_FOLDER+"freemarker.zip");
+        URL checkStyleXmlSourceUrl = TemplateUtil.class.getResource(TemplateUtil.TEMPLATE_PROJECT_FOLDER+zipType.toLowerCase()+".zip");
         if (!destDir.exists()) {
             destDir.mkdir();
         }
