@@ -78,7 +78,8 @@ public class SetupWizard extends AbstractJBakeCommand {
     @Override
     public Result execute(UIExecutionContext context) throws Exception {
         project = getSelectedProject(context);
-
+        String templateType=templateEngine.getValue().toString();
+        jbakeVersion.getValue().setTemplateType(templateType);
         if (facetFactory.install(getSelectedProject(context.getUIContext()),
                 jbakeVersion.getValue())) {
             return Results.success(properties.getMessage("plugin.install.success"));
