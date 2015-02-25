@@ -15,7 +15,10 @@
  */
 package org.jbake.forge.addon.utils;
 
-import java.io.*;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URL;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -24,40 +27,39 @@ import java.util.zip.ZipInputStream;
  * Template utility calls to handle template files related to JBake
  *
  * @author Rajmahendra Hegde <rajmahendra@gmail.com>
- * modified by @author Mani Manasa Mylavarapu <manimanasamylavarapu@gmail.com>
+ *         modified by @author Mani Manasa Mylavarapu <manimanasamylavarapu@gmail.com>
  */
 public final class TemplateUtil {
+    public static final String TEMPLATE_PROJECT_FOLDER = "/templates/project/";
     /**
      * Size of the buffer to read/write data
      */
     private static final int BUFFER_SIZE = 4096;
 
-    public static final String TEMPLATE_PROJECT_FOLDER = "/templates/project/";
-
     /**
      * Extracts a zip file specified by the zipFilePath to a directory specified by
      * destDirectory (will be created if does not exists)
      *
-     * @param zipType
+     * @param zipFileName
      * @param destDirectory
      * @throws IOException
      */
-    public static void unzip(String zipType, String destDirectory) throws IOException {
-         File destDir = new File(destDirectory);
-        URL checkStyleXmlSourceUrl = TemplateUtil.class.getResource(TemplateUtil.TEMPLATE_PROJECT_FOLDER+zipType.toLowerCase()+".zip");
+    public static void unzip(String zipFileName, String destDirectory) throws IOException {
+        File destDir = new File(destDirectory);
+        URL checkStyleXmlSourceUrl = TemplateUtil.class.getResource(TemplateUtil.TEMPLATE_PROJECT_FOLDER + zipFileName.toLowerCase() + ".zip");
         if (!destDir.exists()) {
             destDir.mkdir();
         }
         ZipInputStream zipIn = new ZipInputStream(checkStyleXmlSourceUrl.openStream());
         ZipEntry entry = zipIn.getNextEntry();
-        // iterates over entries in the zip file
+
         while (entry != null) {
             String filePath = destDirectory + File.separator + entry.getName();
             if (!entry.isDirectory()) {
-                // if the entry is a file, extracts it
+
                 extractFile(zipIn, filePath);
             } else {
-                // if the entry is a directory, make the directory
+
                 File dir = new File(filePath);
                 dir.mkdir();
             }
