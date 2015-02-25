@@ -15,6 +15,7 @@
  */
 package org.jbake.forge.addon.facets;
 
+import org.jbake.forge.addon.types.TemplateType;
 import org.jbake.forge.addon.utils.TemplateUtil;
 import org.jboss.forge.addon.dependencies.Coordinate;
 import org.jboss.forge.addon.dependencies.Dependency;
@@ -47,7 +48,7 @@ import java.util.Map.Entry;
  */
 public abstract class AbstractJBakeFacet extends AbstractFacet<Project>
         implements ProjectFacet, JBakeFacet {
-    public String templateType;
+    public TemplateType templateType;
     public static final Dependency KUALI_MAVEN_DEPENDENCY =
             DependencyBuilder
                     .create("org.kuali.maven.plugins:wagon-maven-plugin").setVersion("1.0.3");
@@ -72,12 +73,12 @@ public abstract class AbstractJBakeFacet extends AbstractFacet<Project>
     abstract protected Map<Dependency, List<Dependency>> getRequiredDependencyOptions();
 
     @Override
-    public String getTemplateType() {
+    public TemplateType getTemplateType() {
         return templateType;
     }
 
     @Override
-    public void setTemplateType(String templateType) {
+    public void setTemplateType(TemplateType templateType) {
         this.templateType = templateType;
     }
 
@@ -117,12 +118,12 @@ public abstract class AbstractJBakeFacet extends AbstractFacet<Project>
     }
 
     public void createJbakeFolderStructure() throws IOException {
-        String zipType = getTemplateType();
+
         Project selectedProject = getFaceted();
         DirectoryResource directoryResource = (DirectoryResource) selectedProject.getRoot();
         File codeFolder = directoryResource.getUnderlyingResourceObject();
         String outputFilePath = codeFolder.getCanonicalPath() + "/src/main/jbake";
-        TemplateUtil.unzip(zipType, outputFilePath);
+        TemplateUtil.unzip( getTemplateType().toString(), outputFilePath);
 
     }
 

@@ -72,14 +72,13 @@ public class SetupWizard extends AbstractJBakeCommand {
     @Override
     public void initializeUI(final UIBuilder builder) throws Exception {
         builder.add(jbakeVersion).add(templateEngine);
-
     }
 
     @Override
     public Result execute(UIExecutionContext context) throws Exception {
         project = getSelectedProject(context);
-        String templateType=templateEngine.getValue().toString();
-        jbakeVersion.getValue().setTemplateType(templateType);
+
+        jbakeVersion.getValue().setTemplateType(templateEngine.getValue());
         if (facetFactory.install(getSelectedProject(context.getUIContext()),
                 jbakeVersion.getValue())) {
             return Results.success(properties.getMessage("plugin.install.success"));
@@ -95,7 +94,7 @@ public class SetupWizard extends AbstractJBakeCommand {
                 .description(properties.getMetadataValue("setup.description"))
                 .category(
                         Categories.create(super.getMetadata(context)
-                                .getCategory(),  properties.getKeyValue("jbakeName")));
+                                .getCategory(), properties.getKeyValue("jbakeName")));
     }
 
     @Override
