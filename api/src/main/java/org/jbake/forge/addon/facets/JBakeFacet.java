@@ -15,6 +15,7 @@
  */
 package org.jbake.forge.addon.facets;
 
+import org.jbake.forge.addon.types.JbakeBuildSystemType;
 import org.jbake.forge.addon.types.TemplateType;
 import org.jboss.forge.addon.projects.ProjectFacet;
 import org.jboss.forge.furnace.versions.Version;
@@ -30,6 +31,10 @@ public interface JBakeFacet extends ProjectFacet {
     Version getSpecVersion();
 
     TemplateType getTemplateType();
+
+    JbakeBuildSystemType getJbakeBuildSystemType();
+
+    void setJbakeBuildSystemType(JbakeBuildSystemType jbakeBuildSystemType);
 
     void setTemplateType(TemplateType templateType);
 }

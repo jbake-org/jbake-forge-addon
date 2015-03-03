@@ -22,7 +22,12 @@
 
 	<dependencyManagement>
 		<dependencies>
-
+			<dependency>
+				<groupId>org.jboss.forge.addon</groupId>
+				<artifactId>gradle</artifactId>
+				<classifier>forge-addon</classifier>
+				<version>2.5.0.Final</version>
+			</dependency>
 			<dependency>
 				<groupId>org.jboss.forge.addon</groupId>
 				<artifactId>ui</artifactId>
