@@ -15,7 +15,7 @@
  */
 package org.jbake.forge.addon.facets;
 
-import org.jbake.forge.addon.types.JbakeBuildSystemType;
+import org.jbake.forge.addon.types.BuildSystemType;
 import org.jbake.forge.addon.types.TemplateType;
 import org.jbake.forge.addon.utils.TemplateUtil;
 import org.jboss.forge.addon.dependencies.Coordinate;
@@ -31,11 +31,9 @@ import org.jboss.forge.addon.maven.projects.MavenPluginFacet;
 import org.jboss.forge.addon.projects.Project;
 import org.jboss.forge.addon.projects.ProjectFacet;
 import org.jboss.forge.addon.projects.ProjectFactory;
-import org.jboss.forge.addon.projects.ProjectProvider;
 import org.jboss.forge.addon.projects.dependencies.DependencyInstaller;
 import org.jboss.forge.addon.projects.facets.DependencyFacet;
 import org.jboss.forge.addon.resource.DirectoryResource;
-import org.jboss.forge.furnace.services.Imported;
 
 import javax.inject.Inject;
 import java.io.File;
@@ -52,16 +50,16 @@ import java.util.Map.Entry;
 public abstract class AbstractJBakeFacet extends AbstractFacet<Project>
         implements ProjectFacet, JBakeFacet {
     @Override
-    public JbakeBuildSystemType getJbakeBuildSystemType() {
-        return jbakeBuildSystemType;
+    public BuildSystemType getBuildSystemType() {
+        return buildSystemType;
     }
 
     @Override
-    public void setJbakeBuildSystemType(JbakeBuildSystemType jbakeBuildSystemType) {
-        this.jbakeBuildSystemType = jbakeBuildSystemType;
+    public void setBuildSystemType(BuildSystemType buildSystemType) {
+        this.buildSystemType = buildSystemType;
     }
 
-    public JbakeBuildSystemType jbakeBuildSystemType;
+    public BuildSystemType buildSystemType;
     public TemplateType templateType;
     public static final Dependency KUALI_MAVEN_DEPENDENCY =
             DependencyBuilder
@@ -90,6 +88,9 @@ public abstract class AbstractJBakeFacet extends AbstractFacet<Project>
     public TemplateType getTemplateType() {
         return templateType;
     }
+
+
+
 
     @Override
     public void setTemplateType(TemplateType templateType) {
