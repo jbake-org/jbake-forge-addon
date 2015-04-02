@@ -137,8 +137,13 @@ public abstract class AbstractJBakeFacet extends AbstractFacet<Project>
         Project selectedProject = getFaceted();
         DirectoryResource directoryResource = (DirectoryResource) selectedProject.getRoot();
         File codeFolder = directoryResource.getUnderlyingResourceObject();
-        String outputFilePath = codeFolder.getCanonicalPath() + "/src/main/jbake";
-        TemplateUtil.unzip( getTemplateType().toString(), outputFilePath);
+        String outputFilePath=null;
+        if(buildSystemType==(BuildSystemType.maven))
+        {
+            outputFilePath = codeFolder.getCanonicalPath() + "/src/main/jbake";
+        }
+        outputFilePath = codeFolder.getCanonicalPath() + "/src/jbake";
+        TemplateUtil.unzip(getTemplateType().toString(), outputFilePath);
 
     }
 
