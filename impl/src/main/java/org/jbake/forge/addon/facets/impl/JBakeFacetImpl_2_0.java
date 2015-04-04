@@ -15,51 +15,195 @@
  */
 package org.jbake.forge.addon.facets.impl;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.inject.Inject;
-
 import org.jbake.forge.addon.facets.AbstractJBakeFacet;
+import org.jbake.forge.addon.types.BuildSystemType;
+import org.jbake.forge.addon.types.TemplateType;
+import org.jbake.forge.addon.utils.TemplateUtil;
+import org.jboss.forge.addon.dependencies.Coordinate;
 import org.jboss.forge.addon.dependencies.Dependency;
+import org.jboss.forge.addon.dependencies.builder.CoordinateBuilder;
+import org.jboss.forge.addon.dependencies.builder.DependencyBuilder;
+import org.jboss.forge.addon.maven.plugins.ExecutionBuilder;
+import org.jboss.forge.addon.maven.plugins.MavenPlugin;
+import org.jboss.forge.addon.maven.plugins.MavenPluginAdapter;
+import org.jboss.forge.addon.maven.plugins.MavenPluginBuilder;
 import org.jboss.forge.addon.maven.projects.MavenBuildSystem;
+import org.jboss.forge.addon.maven.projects.MavenPluginFacet;
 import org.jboss.forge.addon.projects.Project;
+import org.jboss.forge.addon.projects.ProjectFactory;
 import org.jboss.forge.addon.projects.dependencies.DependencyInstaller;
 import org.jboss.forge.addon.resource.DirectoryResource;
 import org.jboss.forge.furnace.versions.SingleVersion;
 import org.jboss.forge.furnace.versions.Version;
 
+import javax.inject.Inject;
+import java.io.File;
+import java.io.IOException;
+
 /**
- *
- *
  * @author Rajmahendra Hegde <rajmahendra@gmail.com>
- * modified by @author Mani Manasa Mylavarapu <manimanasamylavarapu@gmail.com>
+ *         modified by @author Mani Manasa Mylavarapu <manimanasamylavarapu@gmail.com>
  */
 public class JBakeFacetImpl_2_0 extends AbstractJBakeFacet {
+    protected final DependencyInstaller installer;
+    @Inject
+    public JBakeFacetImpl_2_0(final DependencyInstaller installer) {
+        this.installer = installer;
+    }
+    public static final Dependency KUALI_MAVEN_DEPENDENCY =
+            DependencyBuilder
+                    .create("org.kuali.maven.plugins:wagon-maven-plugin").setVersion("1.0.3");
+    public static final Dependency JBAKE_CORE_DEPENDENCY =
+            DependencyBuilder
+                    .create("org.jbake:jbake-core").setVersion("2.3.2").
+                    addExclusion(CoordinateBuilder.create().setGroupId("org.eclipse.jetty").setArtifactId("jetty-server"));
+    public static final Dependency JBAKE_POM_DEPENDENCY =
+            DependencyBuilder
+                    .create("br.com.ingenieux:jbake-maven-plugin")
+                    .setPackaging("pom")
+                    .setVersion("0.0.9");
+    @Inject
+    private ProjectFactory projectFactory;
 
-	@Inject
-	private MavenBuildSystem buildSystem;
 
-	@Inject
-	public JBakeFacetImpl_2_0(DependencyInstaller installer) {
-		super(installer);
-	}
 
-	@Override
-	protected Map<Dependency, List<Dependency>> getRequiredDependencyOptions() {
+    @Override
+    public void setTemplateType(TemplateType templateType) {
+        this.templateType = templateType;
+    }
+
+    @Override
+    public void installJbakeCoreDependencies() {
+        this.installer.install(getFaceted(), JBAKE_CORE_DEPENDENCY);
+    }
+
+    @Override
+    public boolean isInstalled() {
+        /*if (isDependencyRequirementsMet() && isJbakeFolderCreated())
+			return true;
+		else
+			return false;*/
+        return false;
+    }
+	/*@Override
+	public boolean isDependencyRequirementsMet() {
+		DependencyFacet deps = origin.getFacet(DependencyFacet.class);
+		for (Map.Entry<Dependency, List<Dependency>> group : getRequiredDependencyOptions()
+				.entrySet()) {
+			boolean satisfied = false;
+			for (Dependency dependency : group.getValue()) {
+				if (deps.hasEffectiveDependency(dependency)) {
+					satisfied = true;
+					break;
+				}
+			}
+
+			if (!satisfied)
+				return false;
+		}
+		return true;
+	}*/
+
+    /*public void addRequiredDependency() {
+        boolean isInstalled = false;
+        DependencyFacet dependencyFacet = origin
+                .getFacet(DependencyFacet.class);
+        for (Map.Entry<Dependency, List<Dependency>> group : getRequiredDependencyOptions()
+                .entrySet()) {
+            for (Dependency dependency : group.getValue()) {
+                if (dependencyFacet.hasEffectiveDependency(dependency)) {
+                    isInstalled = true;
+                    break;
+                }
+            }
+            if (!isInstalled) {
+                installer.installManaged(origin, JBAKE_POM_DEPENDENCY);
+                installer.install(origin, group.getKey());
+            }
+        }
+    }
+*/
+    @Override
+    public void createJbakeFolderStructure() throws IOException {
+
+        Project selectedProject = getFaceted();
+        DirectoryResource directoryResource = (DirectoryResource) selectedProject.getRoot();
+        File codeFolder = directoryResource.getUnderlyingResourceObject();
+        String outputFilePath = null;
+        if (buildSystemType == (BuildSystemType.maven)) {
+            outputFilePath = codeFolder.getCanonicalPath() + "/src/main/jbake";
+        }
+        else {
+            outputFilePath = codeFolder.getCanonicalPath() + "/src/jbake";
+        }
+        TemplateUtil.unzip(getTemplateType().toString(), outputFilePath);
+
+    }
+
+    @Override
+    public void installMavenPluginDependencies() {
+        Coordinate warCompiler = CoordinateBuilder.create("org.apache.maven.plugins:maven-war-plugin").setVersion("2.4");
+        Coordinate jbakeCompiler = CoordinateBuilder.create("br.com.ingenieux:jbake-maven-plugin");
+
+        MavenPluginBuilder warBuilder = MavenPluginBuilder.create().setCoordinate(warCompiler);
+        MavenPluginBuilder jbakeBuilder = MavenPluginBuilder.create()
+                .setCoordinate(jbakeCompiler).addExecution(ExecutionBuilder.create().setId("default-generate").setPhase("generate-resources").addGoal("generate"));
+
+        MavenPlugin warPlugin = new MavenPluginAdapter(warBuilder);
+        MavenPlugin jbakePlugin = new MavenPluginAdapter(jbakeBuilder);
+
+        MavenPluginFacet pluginFacet = getFaceted().getFacet(MavenPluginFacet.class);
+
+        pluginFacet.addPlugin(warPlugin);
+        pluginFacet.addPlugin(jbakePlugin);
+
+    }
+
+    @Override
+    public boolean install() {
+        try {
+            createJbakeFolderStructure();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        installJbakeCoreDependencies();
+        installMavenPluginDependencies();
+        return true;
+    }
+
+    public BuildSystemType buildSystemType;
+    public TemplateType templateType;
+    @Inject
+    private MavenBuildSystem buildSystem;
+
+    @Override
+    public BuildSystemType getBuildSystemType() {
+        return buildSystemType;
+    }
+
+    @Override
+    public void setBuildSystemType(BuildSystemType buildSystemType) {
+        this.buildSystemType = buildSystemType;
+    }
+	/*@Override
+	public Map<Dependency, List<Dependency>> getRequiredDependencyOptions() {
 		Map<Dependency, List<Dependency>> dependency = new HashMap<Dependency, List<Dependency>>();
 		return dependency;
-	}
+	}*/
 
-	@Override
-	public boolean isJbakeFolderCreated() {
-		return false;
-	}
+    @Override
+    public TemplateType getTemplateType() {
+        return templateType;
+    }
 
-	@Override
-	public Version getSpecVersion() {
-		return new SingleVersion("2.0");
-	}
+    @Override
+    public boolean isJbakeFolderCreated() {
+        return false;
+    }
+
+    @Override
+    public Version getSpecVersion() {
+        return new SingleVersion("2.0");
+    }
 
 }
