@@ -16,6 +16,7 @@
 package org.jbake.forge.addon.ui.setup;
 
 import org.jbake.forge.addon.facets.JBakeFacet;
+import org.jbake.forge.addon.types.BuildSystemType;
 import org.jbake.forge.addon.types.TemplateType;
 import org.jbake.forge.addon.ui.AbstractJBakeCommand;
 import org.jboss.forge.addon.dependencies.Coordinate;
@@ -64,6 +65,10 @@ public class SetupWizard extends AbstractJBakeCommand {
     private UISelectOne<TemplateType> templateEngine;
 
     @Inject
+    @WithAttributes(label = "Build System", type = InputType.DROPDOWN, required = true, shortName = 'b', description = "Build system to be used for building the application")
+    private UISelectOne<BuildSystemType> buildSystemType;
+
+    @Inject
     private FacetFactory facetFactory;
 
     @Inject
@@ -72,13 +77,14 @@ public class SetupWizard extends AbstractJBakeCommand {
     @Override
     public void initializeUI(final UIBuilder builder) throws Exception {
         builder.add(jbakeVersion).add(templateEngine);
+        builder.add(jbakeVersion).add(buildSystemType);
     }
 
     @Override
     public Result execute(UIExecutionContext context) throws Exception {
         project = getSelectedProject(context);
-
         jbakeVersion.getValue().setTemplateType(templateEngine.getValue());
+        jbakeVersion.getValue().setBuildSystemType(buildSystemType.getValue());
         if (facetFactory.install(getSelectedProject(context.getUIContext()),
                 jbakeVersion.getValue())) {
             return Results.success(properties.getMessage("plugin.install.success"));
