@@ -32,6 +32,7 @@ import org.jboss.forge.addon.maven.projects.MavenPluginFacet;
 import org.jboss.forge.addon.projects.Project;
 import org.jboss.forge.addon.projects.ProjectFactory;
 import org.jboss.forge.addon.projects.dependencies.DependencyInstaller;
+import org.jboss.forge.addon.projects.facets.DependencyFacet;
 import org.jboss.forge.addon.resource.DirectoryResource;
 import org.jboss.forge.furnace.versions.SingleVersion;
 import org.jboss.forge.furnace.versions.Version;
@@ -39,6 +40,9 @@ import org.jboss.forge.furnace.versions.Version;
 import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * @author Rajmahendra Hegde <rajmahendra@gmail.com>
@@ -46,10 +50,12 @@ import java.io.IOException;
  */
 public class JBakeFacetImpl_2_0 extends AbstractJBakeFacet {
     protected final DependencyInstaller installer;
+
     @Inject
     public JBakeFacetImpl_2_0(final DependencyInstaller installer) {
         this.installer = installer;
     }
+
     public static final Dependency KUALI_MAVEN_DEPENDENCY =
             DependencyBuilder
                     .create("org.kuali.maven.plugins:wagon-maven-plugin").setVersion("1.0.3");
@@ -57,14 +63,13 @@ public class JBakeFacetImpl_2_0 extends AbstractJBakeFacet {
             DependencyBuilder
                     .create("org.jbake:jbake-core").setVersion("2.3.2").
                     addExclusion(CoordinateBuilder.create().setGroupId("org.eclipse.jetty").setArtifactId("jetty-server"));
-    public static final Dependency JBAKE_POM_DEPENDENCY =
+    public static final Dependency JBAKE_MAVEN_POM_DEPENDENCY =
             DependencyBuilder
                     .create("br.com.ingenieux:jbake-maven-plugin")
                     .setPackaging("pom")
                     .setVersion("0.0.9");
     @Inject
     private ProjectFactory projectFactory;
-
 
 
     @Override
@@ -78,51 +83,32 @@ public class JBakeFacetImpl_2_0 extends AbstractJBakeFacet {
     }
 
     @Override
-    public boolean isInstalled() {
-        /*if (isDependencyRequirementsMet() && isJbakeFolderCreated())
-			return true;
-		else
-			return false;*/
-        return false;
+    public boolean isJbakeInstalled() {
+        if (isJbakeFolderCreated() && isDependencyRequirementsMet())
+            return true;
+        else
+            return false;
+
     }
-	/*@Override
-	public boolean isDependencyRequirementsMet() {
-		DependencyFacet deps = origin.getFacet(DependencyFacet.class);
-		for (Map.Entry<Dependency, List<Dependency>> group : getRequiredDependencyOptions()
-				.entrySet()) {
-			boolean satisfied = false;
-			for (Dependency dependency : group.getValue()) {
-				if (deps.hasEffectiveDependency(dependency)) {
-					satisfied = true;
-					break;
-				}
-			}
 
-			if (!satisfied)
-				return false;
-		}
-		return true;
-	}*/
-
-    /*public void addRequiredDependency() {
+    @Override
+    public boolean isDependencyRequirementsMet() {
         boolean isInstalled = false;
         DependencyFacet dependencyFacet = origin
                 .getFacet(DependencyFacet.class);
-        for (Map.Entry<Dependency, List<Dependency>> group : getRequiredDependencyOptions()
-                .entrySet()) {
-            for (Dependency dependency : group.getValue()) {
-                if (dependencyFacet.hasEffectiveDependency(dependency)) {
-                    isInstalled = true;
-                    break;
-                }
-            }
-            if (!isInstalled) {
-                installer.installManaged(origin, JBAKE_POM_DEPENDENCY);
-                installer.install(origin, group.getKey());
+        // create an iterator
+        Set<Dependency> requiredDependencies = getRequiredDependencyOptions();
+        Iterator iterator = requiredDependencies.iterator();
+        while (iterator.hasNext()) {
+            Dependency dependency = (Dependency) iterator.next();
+            if (dependencyFacet.hasEffectiveDependency(dependency)) {
+                isInstalled = true;
+
             }
         }
+        return isInstalled;
     }
-*/
+
     @Override
     public void createJbakeFolderStructure() throws IOException {
 
@@ -132,8 +118,7 @@ public class JBakeFacetImpl_2_0 extends AbstractJBakeFacet {
         String outputFilePath = null;
         if (buildSystemType == (BuildSystemType.maven)) {
             outputFilePath = codeFolder.getCanonicalPath() + "/src/main/jbake";
-        }
-        else {
+        } else {
             outputFilePath = codeFolder.getCanonicalPath() + "/src/jbake";
         }
         TemplateUtil.unzip(getTemplateType().toString(), outputFilePath);
@@ -161,14 +146,29 @@ public class JBakeFacetImpl_2_0 extends AbstractJBakeFacet {
 
     @Override
     public boolean install() {
-        try {
-            createJbakeFolderStructure();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (isJbakeInstalled()) {
+            return false;
+        } else {
+            try {
+                createJbakeFolderStructure();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            installJbakeCoreDependencies();
+            if (buildSystemType == (BuildSystemType.maven)) {
+                installMavenPluginDependencies();
+            } else {
+
+            }
+
+            return true;
         }
-        installJbakeCoreDependencies();
-        installMavenPluginDependencies();
-        return true;
+
+    }
+
+    @Override
+    public boolean isInstalled() {
+        return false;
     }
 
     public BuildSystemType buildSystemType;
@@ -185,11 +185,18 @@ public class JBakeFacetImpl_2_0 extends AbstractJBakeFacet {
     public void setBuildSystemType(BuildSystemType buildSystemType) {
         this.buildSystemType = buildSystemType;
     }
-	/*@Override
-	public Map<Dependency, List<Dependency>> getRequiredDependencyOptions() {
-		Map<Dependency, List<Dependency>> dependency = new HashMap<Dependency, List<Dependency>>();
-		return dependency;
-	}*/
+
+    @Override
+    public Set<Dependency> getRequiredDependencyOptions() {
+        Set<Dependency> dependencies = new HashSet<Dependency>();
+        dependencies.add(JBAKE_CORE_DEPENDENCY);
+        if (buildSystemType == BuildSystemType.maven) {
+            // dependencies.add(KUALI_MAVEN_DEPENDENCY);
+            dependencies.add(JBAKE_MAVEN_POM_DEPENDENCY);
+        }
+
+        return dependencies;
+    }
 
     @Override
     public TemplateType getTemplateType() {
@@ -198,7 +205,39 @@ public class JBakeFacetImpl_2_0 extends AbstractJBakeFacet {
 
     @Override
     public boolean isJbakeFolderCreated() {
-        return false;
+        Project selectedProject = getFaceted();
+        DirectoryResource directoryResource = (DirectoryResource) selectedProject.getRoot();
+        File codeFolder = directoryResource.getUnderlyingResourceObject();
+        String filePathStringForMaven = null;
+        String filePathStringForGradle = null;
+        /*if (buildSystemType == (BuildSystemType.maven)) {
+            try {
+                filePathString = codeFolder.getCanonicalPath() + "/src/main/jbake";
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                filePathString = codeFolder.getCanonicalPath() + "/src/jbake";
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }*/
+
+        try {
+            filePathStringForMaven = codeFolder.getCanonicalPath() + "/src/main/jbake";
+            filePathStringForGradle = codeFolder.getCanonicalPath() + "/src/jbake";
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        File f1 = new File(filePathStringForMaven);
+        File f2 = new File(filePathStringForGradle);
+        if (f1.exists() || f2.exists()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
