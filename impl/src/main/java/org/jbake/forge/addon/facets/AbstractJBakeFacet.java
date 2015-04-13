@@ -17,6 +17,7 @@ package org.jbake.forge.addon.facets;
 
 import org.jbake.forge.addon.types.BuildSystemType;
 import org.jbake.forge.addon.types.TemplateType;
+import org.jboss.forge.addon.dependencies.Dependency;
 import org.jboss.forge.addon.facets.AbstractFacet;
 import org.jboss.forge.addon.projects.Project;
 import org.jboss.forge.addon.projects.ProjectFacet;
@@ -25,6 +26,9 @@ import org.jboss.forge.addon.projects.dependencies.DependencyInstaller;
 
 import javax.inject.Inject;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -56,12 +60,12 @@ public abstract class AbstractJBakeFacet extends AbstractFacet<Project>
     public abstract boolean isJbakeFolderCreated();
 
 
-    public abstract boolean isInstalled();
+    public abstract boolean isJbakeInstalled();
 
-    /* public abstract void addRequiredDependency() ;
+    public abstract boolean isDependencyRequirementsMet() ;
 
-     public abstract boolean isDependencyRequirementsMet() ;
- */
+    public abstract Set<Dependency> getRequiredDependencyOptions();
+
     @Override
     public String toString() {
         return getSpecVersion().toString();

@@ -89,7 +89,9 @@ public class SetupWizard extends AbstractJBakeCommand {
                 jbakeVersion.getValue())) {
             return Results.success(properties.getMessage("plugin.install.success"));
         }
-        return Results.fail(properties.getMessage("plugin.install.failure"));
+        else {
+             return Results.fail(properties.getMessage("plugin.install.failure"));
+        }
     }
 
     @Override
