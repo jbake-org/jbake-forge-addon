@@ -16,6 +16,8 @@
 package org.jbake.forge.addon.facets;
 
 import org.jbake.forge.addon.types.BuildSystemType;
+import org.jbake.forge.addon.types.ContentType;
+import org.jbake.forge.addon.types.PublishType;
 import org.jbake.forge.addon.types.TemplateType;
 import org.jboss.forge.addon.projects.ProjectFacet;
 import org.jboss.forge.furnace.versions.Version;
@@ -37,4 +39,18 @@ public interface JBakeFacet extends ProjectFacet {
     void setBuildSystemType(BuildSystemType buildSystemType);
 
     void setTemplateType(TemplateType templateType);
+
+    public abstract void setContentType(ContentType contentType);
+
+    public abstract void setPageStatusType(PublishType pageStatusType);
+
+    public abstract void setPageTitle(String pageTitle);
+
+    public abstract void setTargetDirectory(String targetDirectory);
+
+    public abstract void setCreationOrModificationDate(String creationOrModificationDate);
+
+    public abstract void setPageTags(String[] tags);
+
+    public abstract boolean createPage();
 }

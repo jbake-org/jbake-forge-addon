@@ -17,6 +17,8 @@ package org.jbake.forge.addon.facets.impl;
 
 import org.jbake.forge.addon.facets.AbstractJBakeFacet;
 import org.jbake.forge.addon.types.BuildSystemType;
+import org.jbake.forge.addon.types.ContentType;
+import org.jbake.forge.addon.types.PublishType;
 import org.jbake.forge.addon.types.TemplateType;
 import org.jbake.forge.addon.utils.TemplateUtil;
 import org.jboss.forge.addon.dependencies.Coordinate;
@@ -50,6 +52,12 @@ import java.util.Set;
  */
 public class JBakeFacetImpl_2_0 extends AbstractJBakeFacet {
     protected final DependencyInstaller installer;
+    ContentType contentType;
+    PublishType pageStatusType;
+    String pageTitle;
+    String targetDirectory;
+    String creationOrModificationDate;
+    String[] tags;
 
     @Inject
     public JBakeFacetImpl_2_0(final DependencyInstaller installer) {
@@ -196,6 +204,42 @@ public class JBakeFacetImpl_2_0 extends AbstractJBakeFacet {
         }
 
         return dependencies;
+    }
+
+    @Override
+    public void setContentType(ContentType contentType) {
+        this.contentType = contentType;
+    }
+
+    @Override
+    public void setPageStatusType(PublishType pageStatusType) {
+        this.pageStatusType = pageStatusType;
+    }
+
+    @Override
+    public void setPageTitle(String pageTitle) {
+        this.pageTitle = pageTitle;
+    }
+
+    @Override
+    public void setTargetDirectory(String targetDirectory) {
+        this.targetDirectory = targetDirectory;
+    }
+
+    @Override
+    public void setCreationOrModificationDate(String creationOrModificationDate) {
+        this.creationOrModificationDate = creationOrModificationDate;
+    }
+
+    @Override
+    public void setPageTags(String[] tags) {
+        this.tags = tags;
+    }
+
+    @Override
+    public boolean createPage() {
+
+        return false;
     }
 
     @Override
