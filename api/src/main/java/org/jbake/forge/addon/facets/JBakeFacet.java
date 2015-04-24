@@ -51,4 +51,6 @@ public interface JBakeFacet extends ProjectFacet {
     public abstract void setCreationOrModificationDate(String creationOrModificationDate);
 
     public abstract void setPageTags(String[] tags);
+
+    public abstract boolean createPage();
 }

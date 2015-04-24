@@ -100,7 +100,12 @@ public class NewPageWizard extends AbstractJBakeCommand {
         jbakeVersion.setPageStatusType(pageStatus.getValue());
         String[] tags=pageTags.getValue().split(",");
         jbakeVersion.setPageTags(tags);
-        return Results.success(properties.getMessage("page.create.success"));
+        if (jbakeVersion.createPage()) {
+            return Results.success(properties.getMessage("page.create.success"));
+        }
+        else {
+            return Results.fail(properties.getMessage("page.create.failure"));
+        }
     }
 
     @Override
