@@ -17,6 +17,8 @@ package org.jbake.forge.addon.facets.impl;
 
 import org.jbake.forge.addon.facets.AbstractJBakeFacet;
 import org.jbake.forge.addon.types.BuildSystemType;
+import org.jbake.forge.addon.types.ContentType;
+import org.jbake.forge.addon.types.PublishType;
 import org.jbake.forge.addon.types.TemplateType;
 import org.jbake.forge.addon.utils.TemplateUtil;
 import org.jboss.forge.addon.dependencies.Coordinate;
@@ -196,6 +198,36 @@ public class JBakeFacetImpl_2_0 extends AbstractJBakeFacet {
         }
 
         return dependencies;
+    }
+
+    @Override
+    public void setContentType(ContentType contentType) {
+
+    }
+
+    @Override
+    public void setPageStatusType(PublishType pageStatusType) {
+
+    }
+
+    @Override
+    public void setPageTitle(String pageTitle) {
+
+    }
+
+    @Override
+    public void setTargetDirectory(String targetDirectory) {
+
+    }
+
+    @Override
+    public void setCreationOrModificationDate(String creationOrModificationDate) {
+
+    }
+
+    @Override
+    public void setPageTags(String[] tags) {
+
     }
 
     @Override

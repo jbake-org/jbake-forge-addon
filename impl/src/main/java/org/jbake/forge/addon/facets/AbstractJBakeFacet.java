@@ -16,18 +16,15 @@
 package org.jbake.forge.addon.facets;
 
 import org.jbake.forge.addon.types.BuildSystemType;
+import org.jbake.forge.addon.types.ContentType;
+import org.jbake.forge.addon.types.PublishType;
 import org.jbake.forge.addon.types.TemplateType;
 import org.jboss.forge.addon.dependencies.Dependency;
 import org.jboss.forge.addon.facets.AbstractFacet;
 import org.jboss.forge.addon.projects.Project;
 import org.jboss.forge.addon.projects.ProjectFacet;
-import org.jboss.forge.addon.projects.ProjectFactory;
-import org.jboss.forge.addon.projects.dependencies.DependencyInstaller;
 
-import javax.inject.Inject;
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 
@@ -62,7 +59,7 @@ public abstract class AbstractJBakeFacet extends AbstractFacet<Project>
 
     public abstract boolean isJbakeInstalled();
 
-    public abstract boolean isDependencyRequirementsMet() ;
+    public abstract boolean isDependencyRequirementsMet();
 
     public abstract Set<Dependency> getRequiredDependencyOptions();
 
@@ -70,4 +67,19 @@ public abstract class AbstractJBakeFacet extends AbstractFacet<Project>
     public String toString() {
         return getSpecVersion().toString();
     }
+
+    // the following are abstract methods for page creation
+    public abstract void setContentType(ContentType contentType);
+
+    public abstract void setPageStatusType(PublishType pageStatusType);
+
+    public abstract void setPageTitle(String pageTitle);
+
+    public abstract void setTargetDirectory(String targetDirectory);
+
+    public abstract void setCreationOrModificationDate(String creationOrModificationDate);
+
+    public abstract void setPageTags(String[] tags);
+
+
 }
