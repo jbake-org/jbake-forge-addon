@@ -22,6 +22,8 @@ import org.jbake.forge.addon.types.TemplateType;
 import org.jboss.forge.addon.projects.ProjectFacet;
 import org.jboss.forge.furnace.versions.Version;
 
+import java.io.IOException;
+
 /**
  * JBake Facet.
  *
@@ -52,5 +54,5 @@ public interface JBakeFacet extends ProjectFacet {
 
     public abstract void setPageTags(String[] tags);
 
-    public abstract boolean createPage();
+    public abstract boolean createPage() throws IOException;
 }

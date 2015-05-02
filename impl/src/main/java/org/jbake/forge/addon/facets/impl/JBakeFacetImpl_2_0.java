@@ -1,12 +1,12 @@
 /**
  * Copyright 2014 JBake
- *
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p/>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -52,6 +52,7 @@ import java.util.Set;
  */
 public class JBakeFacetImpl_2_0 extends AbstractJBakeFacet {
     protected final DependencyInstaller installer;
+    String jbakeFolderPath;
     ContentType contentType;
     PublishType pageStatusType;
     String pageTitle;
@@ -79,6 +80,13 @@ public class JBakeFacetImpl_2_0 extends AbstractJBakeFacet {
     @Inject
     private ProjectFactory projectFactory;
 
+    public String getJbakeFolderPath() {
+        return jbakeFolderPath;
+    }
+
+    public void setJbakeFolderPath(String jbakeFolderPath) {
+        this.jbakeFolderPath = jbakeFolderPath;
+    }
 
     @Override
     public void setTemplateType(TemplateType templateType) {
@@ -119,17 +127,7 @@ public class JBakeFacetImpl_2_0 extends AbstractJBakeFacet {
 
     @Override
     public void createJbakeFolderStructure() throws IOException {
-
-        Project selectedProject = getFaceted();
-        DirectoryResource directoryResource = (DirectoryResource) selectedProject.getRoot();
-        File codeFolder = directoryResource.getUnderlyingResourceObject();
-        String outputFilePath = null;
-        if (buildSystemType == (BuildSystemType.maven)) {
-            outputFilePath = codeFolder.getCanonicalPath() + "/src/main/jbake";
-        } else {
-            outputFilePath = codeFolder.getCanonicalPath() + "/src/jbake";
-        }
-        TemplateUtil.unzip(getTemplateType().toString(), outputFilePath);
+        TemplateUtil.unzip(getTemplateType().toString(), jbakeFolderPath);
 
     }
 
@@ -158,6 +156,7 @@ public class JBakeFacetImpl_2_0 extends AbstractJBakeFacet {
             return false;
         } else {
             try {
+                setAbsoluteJbakeFolderPath(buildSystemType);
                 createJbakeFolderStructure();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -170,6 +169,20 @@ public class JBakeFacetImpl_2_0 extends AbstractJBakeFacet {
             }
 
             return true;
+        }
+
+    }
+
+    private void setAbsoluteJbakeFolderPath(BuildSystemType buildType) throws IOException {
+        Project selectedProject = getFaceted();
+        DirectoryResource directoryResource = (DirectoryResource) selectedProject.getRoot();
+        File codeFolder = directoryResource.getUnderlyingResourceObject();
+        String outputFilePath = null;
+        if (buildType == (BuildSystemType.maven)) {
+            jbakeFolderPath = codeFolder.getCanonicalPath() + "/src/main/jbake";
+
+        } else {
+            jbakeFolderPath = codeFolder.getCanonicalPath() + "/src/jbake";
         }
 
     }
@@ -235,9 +248,16 @@ public class JBakeFacetImpl_2_0 extends AbstractJBakeFacet {
     public void setPageTags(String[] tags) {
         this.tags = tags;
     }
-
     @Override
-    public boolean createPage() {
+    public boolean createPage() throws IOException {
+       if (contentType == (ContentType.AsciiDoc)) {
+
+
+        } else if (contentType == (ContentType.HTML)) {
+
+        } else if (contentType == (ContentType.Markdown)) {
+
+        }
 
         return false;
     }

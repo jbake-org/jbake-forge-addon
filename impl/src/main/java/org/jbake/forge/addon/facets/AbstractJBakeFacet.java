@@ -81,7 +81,7 @@ public abstract class AbstractJBakeFacet extends AbstractFacet<Project>
 
     public abstract void setPageTags(String[] tags);
 
-    public abstract boolean createPage();
+    public abstract boolean createPage() throws IOException;
 
 
 }
