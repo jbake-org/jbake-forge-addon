@@ -56,7 +56,7 @@ public class NewPageWizard extends AbstractJBakeCommand {
     private UIInput<String> pageTitle;
 
     @Inject
-    @WithAttributes(label = "Target Directory", type = InputType.DIRECTORY_PICKER, shortName = 'p', description = "Location of the page")
+    @WithAttributes(label = "Target Directory", type = InputType.DIRECTORY_PICKER, shortName = 'p', description = "Location of the page.Please pick location after content folder in Jbake")
     private UIInput<String> targetDirectory;
 
     @Inject
@@ -98,8 +98,8 @@ public class NewPageWizard extends AbstractJBakeCommand {
         jbakeVersion.setContentType(fileType.getValue());
         jbakeVersion.setCreationOrModificationDate(dateOfCreated.getValue());
         jbakeVersion.setPageStatusType(pageStatus.getValue());
-        String[] tags=pageTags.getValue().split(",");
-        jbakeVersion.setPageTags(tags);
+       // String[] tags=pageTags.getValue().split(",");
+        jbakeVersion.setPageTags(pageTags.getValue());
         if (jbakeVersion.createPage()) {
             return Results.success(properties.getMessage("page.create.success"));
         }

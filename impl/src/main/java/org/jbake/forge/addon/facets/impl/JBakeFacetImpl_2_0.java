@@ -20,6 +20,7 @@ import org.jbake.forge.addon.types.BuildSystemType;
 import org.jbake.forge.addon.types.ContentType;
 import org.jbake.forge.addon.types.PublishType;
 import org.jbake.forge.addon.types.TemplateType;
+import org.jbake.forge.addon.utils.ContentUtil;
 import org.jbake.forge.addon.utils.TemplateUtil;
 import org.jboss.forge.addon.dependencies.Coordinate;
 import org.jboss.forge.addon.dependencies.Dependency;
@@ -52,13 +53,16 @@ import java.util.Set;
  */
 public class JBakeFacetImpl_2_0 extends AbstractJBakeFacet {
     protected final DependencyInstaller installer;
+
+    public BuildSystemType buildSystemType;
+    public TemplateType templateType;
     String jbakeFolderPath;
     ContentType contentType;
     PublishType pageStatusType;
     String pageTitle;
     String targetDirectory;
     String creationOrModificationDate;
-    String[] tags;
+    String tags;
 
     @Inject
     public JBakeFacetImpl_2_0(final DependencyInstaller installer) {
@@ -192,8 +196,6 @@ public class JBakeFacetImpl_2_0 extends AbstractJBakeFacet {
         return false;
     }
 
-    public BuildSystemType buildSystemType;
-    public TemplateType templateType;
     @Inject
     private MavenBuildSystem buildSystem;
 
@@ -245,21 +247,24 @@ public class JBakeFacetImpl_2_0 extends AbstractJBakeFacet {
     }
 
     @Override
-    public void setPageTags(String[] tags) {
+    public void setPageTags(String tags) {
         this.tags = tags;
     }
+
     @Override
     public boolean createPage() throws IOException {
-       if (contentType == (ContentType.AsciiDoc)) {
-
-
+        Boolean isCreated = false;
+        if (contentType == (ContentType.AsciiDoc)) {
+            ContentUtil.createFile(targetDirectory, contentType, pageTitle);
+            isCreated = ContentUtil.writeFile(contentType, pageTitle, creationOrModificationDate, "page", tags, pageStatusType);
         } else if (contentType == (ContentType.HTML)) {
-
+            ContentUtil.createFile(targetDirectory, contentType, pageTitle);
+            isCreated = ContentUtil.writeFile(contentType, pageTitle, creationOrModificationDate, "page", tags, pageStatusType);
         } else if (contentType == (ContentType.Markdown)) {
-
+            ContentUtil.createFile(targetDirectory, contentType, pageTitle);
+            isCreated = ContentUtil.writeFile(contentType, pageTitle, creationOrModificationDate, "page", tags, pageStatusType);
         }
-
-        return false;
+        return isCreated;
     }
 
     @Override
