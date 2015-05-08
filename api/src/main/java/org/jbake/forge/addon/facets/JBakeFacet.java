@@ -48,11 +48,19 @@ public interface JBakeFacet extends ProjectFacet {
 
     public abstract void setPageTitle(String pageTitle);
 
+    public abstract void setPostTitle(String postTitle);
+
     public abstract void setTargetDirectory(String targetDirectory);
 
     public abstract void setCreationOrModificationDate(String creationOrModificationDate);
 
     public abstract void setPageTags(String tags);
 
+    public abstract void setPostTags(String tags);
+
     public abstract boolean createPage() throws IOException;
+
+    public abstract boolean createPost() throws IOException;
+
+    public abstract void setPostStatusType(PublishType postStatusType);
 }
