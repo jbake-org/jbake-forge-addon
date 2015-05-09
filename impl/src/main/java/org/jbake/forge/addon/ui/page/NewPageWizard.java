@@ -98,7 +98,6 @@ public class NewPageWizard extends AbstractJBakeCommand {
         jbakeVersion.setContentType(fileType.getValue());
         jbakeVersion.setCreationOrModificationDate(dateOfCreated.getValue());
         jbakeVersion.setPageStatusType(pageStatus.getValue());
-       // String[] tags=pageTags.getValue().split(",");
         jbakeVersion.setPageTags(pageTags.getValue());
         if (jbakeVersion.createPage()) {
             return Results.success(properties.getMessage("page.create.success"));

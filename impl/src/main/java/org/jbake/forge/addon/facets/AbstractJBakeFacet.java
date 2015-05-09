@@ -81,7 +81,15 @@ public abstract class AbstractJBakeFacet extends AbstractFacet<Project>
 
     public abstract void setPageTags(String tags);
 
+    public abstract void setPostTitle(String postTitle);
+
+    public abstract void setPostTags(String tags);
+
     public abstract boolean createPage() throws IOException;
+
+    public abstract boolean createPost() throws IOException;
+
+    public abstract void setPostStatusType(PublishType postStatusType);
 
 
 }

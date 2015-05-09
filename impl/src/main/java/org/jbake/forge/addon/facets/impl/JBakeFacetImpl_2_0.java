@@ -59,10 +59,12 @@ public class JBakeFacetImpl_2_0 extends AbstractJBakeFacet {
     String jbakeFolderPath;
     ContentType contentType;
     PublishType pageStatusType;
+    String postTitle;
     String pageTitle;
     String targetDirectory;
     String creationOrModificationDate;
     String tags;
+    PublishType postStatusType;
 
     @Inject
     public JBakeFacetImpl_2_0(final DependencyInstaller installer) {
@@ -252,6 +254,16 @@ public class JBakeFacetImpl_2_0 extends AbstractJBakeFacet {
     }
 
     @Override
+    public void setPostTitle(String postTitle) {
+        this.postTitle = postTitle;
+    }
+
+    @Override
+    public void setPostTags(String tags) {
+        this.tags = tags;
+    }
+
+    @Override
     public boolean createPage() throws IOException {
         Boolean isCreated = false;
         if (contentType == (ContentType.AsciiDoc)) {
@@ -265,6 +277,27 @@ public class JBakeFacetImpl_2_0 extends AbstractJBakeFacet {
             isCreated = ContentUtil.writeFile(contentType, pageTitle, creationOrModificationDate, "page", tags, pageStatusType);
         }
         return isCreated;
+    }
+
+    @Override
+    public boolean createPost() throws IOException {
+        Boolean isCreated = false;
+        if (contentType == (ContentType.AsciiDoc)) {
+            ContentUtil.createFile(targetDirectory, contentType, postTitle);
+            isCreated = ContentUtil.writeFile(contentType, postTitle, creationOrModificationDate, "post", tags, postStatusType);
+        } else if (contentType == (ContentType.HTML)) {
+            ContentUtil.createFile(targetDirectory, contentType, postTitle);
+            isCreated = ContentUtil.writeFile(contentType, postTitle, creationOrModificationDate, "post", tags, postStatusType);
+        } else if (contentType == (ContentType.Markdown)) {
+            ContentUtil.createFile(targetDirectory, contentType, postTitle);
+            isCreated = ContentUtil.writeFile(contentType, postTitle, creationOrModificationDate, "post", tags, postStatusType);
+        }
+        return isCreated;
+    }
+
+    @Override
+    public void setPostStatusType(PublishType postStatusType) {
+        this.postStatusType = postStatusType;
     }
 
     @Override
