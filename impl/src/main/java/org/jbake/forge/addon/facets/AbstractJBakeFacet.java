@@ -19,6 +19,7 @@ import org.jbake.forge.addon.types.BuildSystemType;
 import org.jbake.forge.addon.types.ContentType;
 import org.jbake.forge.addon.types.PublishType;
 import org.jbake.forge.addon.types.TemplateType;
+import org.jboss.forge.addon.dependencies.Coordinate;
 import org.jboss.forge.addon.dependencies.Dependency;
 import org.jboss.forge.addon.facets.AbstractFacet;
 import org.jboss.forge.addon.projects.Project;
@@ -50,7 +51,6 @@ public abstract class AbstractJBakeFacet extends AbstractFacet<Project>
 
     public abstract void installMavenPluginDependencies();
 
-    public abstract void installJbakeCoreDependencies();
 
     public abstract void createJbakeFolderStructure() throws IOException;
 
@@ -61,7 +61,7 @@ public abstract class AbstractJBakeFacet extends AbstractFacet<Project>
 
     public abstract boolean isDependencyRequirementsMet();
 
-    public abstract Set<Dependency> getRequiredDependencyOptions();
+    public abstract Set<Coordinate> getRequiredDependencyOptions();
 
     @Override
     public String toString() {
