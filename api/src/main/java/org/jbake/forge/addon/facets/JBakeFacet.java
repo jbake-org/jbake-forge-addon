@@ -62,5 +62,9 @@ public interface JBakeFacet extends ProjectFacet {
 
     public abstract boolean createPost() throws IOException;
 
+    public abstract void setListenAddress(String listenAddress) throws IOException;
+
+    public abstract void setPort(String port) throws IOException;
+
     public abstract void setPostStatusType(PublishType postStatusType);
 }
