@@ -67,10 +67,6 @@ public class NewPageWizard extends AbstractJBakeCommand {
     @WithAttributes(label = "Date of Created/Modified", shortName = 'd', description = "Date of creation for the Page")
     private UIInput<String> dateOfCreated;
 
-	/*@Inject
-    @WithAttributes(label = "Template Type", required = true, shortName = 'e', description = "Template to be used")
-	private UIInput<String> templateType;*/
-
     @Inject
     @WithAttributes(label = "Page Tags", defaultValue = "page", shortName = 't', description = "Tag names in comma separated")
     private UIInput<String> pageTags;
