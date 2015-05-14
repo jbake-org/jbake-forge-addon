@@ -28,6 +28,7 @@ import org.jboss.forge.addon.ui.context.UIBuilder;
 import org.jboss.forge.addon.ui.context.UIContext;
 import org.jboss.forge.addon.ui.context.UIExecutionContext;
 import org.jboss.forge.addon.ui.hints.InputType;
+import org.jboss.forge.addon.ui.input.UIInput;
 import org.jboss.forge.addon.ui.input.UISelectOne;
 import org.jboss.forge.addon.ui.metadata.UICommandMetadata;
 import org.jboss.forge.addon.ui.metadata.WithAttributes;
@@ -69,15 +70,19 @@ public class SetupWizard extends AbstractJBakeCommand {
     private UISelectOne<BuildSystemType> buildSystemType;
 
     @Inject
-    private FacetFactory facetFactory;
+    @WithAttributes(label = "listen Address", defaultValue = "localhost", shortName = 'l', description = "Give the host address")
+    private UIInput<String> listenAddress;
 
     @Inject
-    private ResourceFactory resourceFactory;
+    @WithAttributes(label = "port", defaultValue = "8820", shortName = 'p', description = "port to which your jbake host should listen to")
+    private UIInput<String> port;
+
+    @Inject
+    private FacetFactory facetFactory;
 
     @Override
     public void initializeUI(final UIBuilder builder) throws Exception {
-        builder.add(jbakeVersion).add(templateEngine);
-        builder.add(jbakeVersion).add(buildSystemType);
+        builder.add(jbakeVersion).add(templateEngine).add(buildSystemType).add(listenAddress).add(port);
     }
 
     @Override
@@ -85,12 +90,13 @@ public class SetupWizard extends AbstractJBakeCommand {
         project = getSelectedProject(context);
         jbakeVersion.getValue().setTemplateType(templateEngine.getValue());
         jbakeVersion.getValue().setBuildSystemType(buildSystemType.getValue());
+        jbakeVersion.getValue().setListenAddress(listenAddress.getValue());
+        jbakeVersion.getValue().setPort(port.getValue());
         if (facetFactory.install(getSelectedProject(context.getUIContext()),
                 jbakeVersion.getValue())) {
             return Results.success(properties.getMessage("plugin.install.success"));
-        }
-        else {
-             return Results.fail(properties.getMessage("plugin.install.failure"));
+        } else {
+            return Results.fail(properties.getMessage("plugin.install.failure"));
         }
     }
 

@@ -32,7 +32,6 @@ import org.jboss.forge.addon.maven.projects.MavenPluginFacet;
 import org.jboss.forge.addon.projects.Project;
 import org.jboss.forge.addon.projects.ProjectFactory;
 import org.jboss.forge.addon.projects.dependencies.DependencyInstaller;
-import org.jboss.forge.addon.projects.facets.DependencyFacet;
 import org.jboss.forge.addon.resource.DirectoryResource;
 import org.jboss.forge.furnace.versions.SingleVersion;
 import org.jboss.forge.furnace.versions.Version;
@@ -49,6 +48,8 @@ import java.util.Set;
  *         modified by @author Mani Manasa Mylavarapu <manimanasamylavarapu@gmail.com>
  */
 public class JBakeFacetImpl_2_0 extends AbstractJBakeFacet {
+    public static final String ORG_APACHE_MAVEN_PLUGINS_MAVEN_WAR_PLUGIN = "org.apache.maven.plugins:maven-war-plugin";
+    public static final String BR_COM_INGENIEUX_JBAKE_MAVEN_PLUGIN = "br.com.ingenieux:jbake-maven-plugin";
     protected final DependencyInstaller installer;
 
     public BuildSystemType buildSystemType;
@@ -62,20 +63,26 @@ public class JBakeFacetImpl_2_0 extends AbstractJBakeFacet {
     String creationOrModificationDate;
     String tags;
     PublishType postStatusType;
+    String listenAddress;
+    String port;
+
 
     @Inject
     public JBakeFacetImpl_2_0(final DependencyInstaller installer) {
         this.installer = installer;
     }
 
-    public static final Dependency KUALI_MAVEN_DEPENDENCY =
+    public static final Dependency JBAKE_CORE_DEPENDENCY =
             DependencyBuilder
-                    .create("org.kuali.maven.plugins:wagon-maven-plugin").setVersion("1.0.3");
-    public static final Dependency JBAKE_MAVEN_POM_DEPENDENCY =
+                    .create("org.jbake:jbake-core").setVersion("2.3.2");
+
+    public static final Dependency JBAKE_FREEMARKER_TEMPLATE_ENGINE_DEPENDENCY =
             DependencyBuilder
-                    .create("br.com.ingenieux:jbake-maven-plugin")
-                    .setPackaging("pom")
-                    .setVersion("0.0.9");
+                    .create("org.freemarker:freemarker").setVersion("2.3.20");
+
+    public static final Dependency JBAKE_PEGDOWN_TEMPLATE_ENGINE_DEPENDENCY =
+            DependencyBuilder
+                    .create("org.pegdown:pegdown").setVersion("1.4.2");
     @Inject
     private ProjectFactory projectFactory;
 
@@ -125,69 +132,39 @@ public class JBakeFacetImpl_2_0 extends AbstractJBakeFacet {
 
     }
 
-    @Override
-    public void installMavenPluginDependencies() {
-
-        Coordinate warCompiler = CoordinateBuilder.create("org.apache.maven.plugins:maven-war-plugin").setVersion("2.4");
-        Coordinate jbakeCompiler = CoordinateBuilder.create("br.com.ingenieux:jbake-maven-plugin");
-
-        MavenPluginBuilder warBuilder = MavenPluginBuilder.create().setCoordinate(warCompiler);
-        MavenPluginBuilder jbakeBuilder = MavenPluginBuilder.create()
-                .setCoordinate(jbakeCompiler).addExecution(ExecutionBuilder.create().setId("default-generate").setPhase("generate-resources").addGoal("generate"));
-
-        MavenPlugin warPlugin = new MavenPluginAdapter(warBuilder);
-        MavenPlugin jbakePlugin = new MavenPluginAdapter(jbakeBuilder);
-
-        MavenPluginFacet pluginFacet = getFaceted().getFacet(MavenPluginFacet.class);
-
-        pluginFacet.addPlugin(warPlugin);
-        pluginFacet.addPlugin(jbakePlugin);
-
-    }
 
     @Override
     public Set<Coordinate> getRequiredDependencyOptions() {
         Set<Coordinate> coordinates = new HashSet<Coordinate>();
         if (buildSystemType == BuildSystemType.maven) {
-            coordinates.add(CoordinateBuilder.create("org.kuali.maven.wagons:maven-s3-wagon").setVersion("1.1.20"));
-            coordinates.add(CoordinateBuilder.create("org.kuali.maven.plugins:wagon-maven-plugin").setVersion("1.0.3"));
-            coordinates.add(CoordinateBuilder.create("br.com.ingenieux:jbake-maven-plugin"));
-            coordinates.add(CoordinateBuilder.create("org.apache.maven.plugins:maven-war-plugin").setVersion("2.4"));
+            coordinates.add(CoordinateBuilder.create(BR_COM_INGENIEUX_JBAKE_MAVEN_PLUGIN));
+            coordinates.add(CoordinateBuilder.create(ORG_APACHE_MAVEN_PLUGINS_MAVEN_WAR_PLUGIN).setVersion("2.4"));
         }
 
         return coordinates;
     }
 
-    private void installMavenPluginDependenciesNew() {
-        Coordinate kualiExtensionCoordinates = CoordinateBuilder.create("org.kuali.maven.wagons:maven-s3-wagon").setVersion("1.1.20");
-        Coordinate kualiMavenPluginCoordinates = CoordinateBuilder.create("org.kuali.maven.plugins:wagon-maven-plugin").setVersion("1.0.3");
-        Coordinate jbakeMavenCompiler = CoordinateBuilder.create("br.com.ingenieux:jbake-maven-plugin");
-        Coordinate mavenWarCompiler = CoordinateBuilder.create("org.apache.maven.plugins:maven-war-plugin").setVersion("2.4");
+    @Override
+    public void installMavenPluginDependencies() {
+        Coordinate jbakeMavenCompiler = CoordinateBuilder.create(BR_COM_INGENIEUX_JBAKE_MAVEN_PLUGIN);
+        Coordinate mavenWarCompiler = CoordinateBuilder.create(ORG_APACHE_MAVEN_PLUGINS_MAVEN_WAR_PLUGIN).setVersion("2.4");
 
         MavenPluginBuilder jbakeBuilder = MavenPluginBuilder.create()
-                .setCoordinate(jbakeMavenCompiler).addExecution(ExecutionBuilder.create().setId("default-generate").setPhase("generate-resources").addGoal("generate"));
+                .setCoordinate(jbakeMavenCompiler).addExecution(ExecutionBuilder.create().setId("default-generate").setPhase("generate-resources").addGoal("generate"))
+                .setConfiguration(ConfigurationBuilder.create().addConfigurationElement(ConfigurationElementBuilder.create().addChild("listenAddress").setText(listenAddress))
+                        .addConfigurationElement(ConfigurationElementBuilder.create().addChild("port").setText(port))).addPluginDependency(JBAKE_CORE_DEPENDENCY).addPluginDependency(JBAKE_FREEMARKER_TEMPLATE_ENGINE_DEPENDENCY)
+                .addPluginDependency(JBAKE_PEGDOWN_TEMPLATE_ENGINE_DEPENDENCY);
         MavenPluginBuilder mavenWarBuilder = MavenPluginBuilder.create().setCoordinate(mavenWarCompiler).setConfiguration(ConfigurationBuilder.create()
                 .addConfigurationElement(ConfigurationElementBuilder.create()
                         .addChild("failOnMissingWebXml").setText("false")));
-        MavenPluginBuilder kualiMavenPluginBuilder = MavenPluginBuilder.create().setCoordinate(kualiMavenPluginCoordinates).addExecution(ExecutionBuilder.create().setId("verify")
-                .addGoal("upload")).setConfiguration(ConfigurationBuilder.create().addConfigurationElement(ConfigurationElementBuilder.create().addChild("fromDir").setText("${project.build.directory}/${project.build.finalName}")
-                .addChild("includes").setText("***/*//*").addChild("url").setText("s3://docs.ingenieux.com.br").addChild("excludes").setText("***/*//*.jsp,**//*web.xml").addChild("serverId")
-                .setText("docs.ingenieux.com.br")));
-        MavenPluginBuilder kualiExtensionsBuilder = MavenPluginBuilder.create()
-                .setCoordinate(kualiExtensionCoordinates)
-                .setExtensions(true);
 
         MavenPlugin mavenWarPlugin = new MavenPluginAdapter(mavenWarBuilder);
         MavenPlugin jbakePlugin = new MavenPluginAdapter(jbakeBuilder);
-        MavenPlugin kualiMavenPlugin = new MavenPluginAdapter(kualiMavenPluginBuilder);
-        MavenPlugin kualiMavenPluginExtensions = new MavenPluginAdapter(kualiExtensionsBuilder);
 
         MavenPluginFacet pluginFacet = getFaceted().getFacet(MavenPluginFacet.class);
 
-        pluginFacet.addPlugin(kualiMavenPluginExtensions);
         pluginFacet.addPlugin(jbakePlugin);
         pluginFacet.addPlugin(mavenWarPlugin);
-        pluginFacet.addPlugin(kualiMavenPlugin);
 
 
     }
@@ -205,8 +182,7 @@ public class JBakeFacetImpl_2_0 extends AbstractJBakeFacet {
             }
             // installJbakeCoreDependencies();
             if (buildSystemType == (BuildSystemType.maven)) {
-                // installMavenPluginDependencies();
-                installMavenPluginDependenciesNew();
+                installMavenPluginDependencies();
             } else {
 
             }
@@ -319,6 +295,16 @@ public class JBakeFacetImpl_2_0 extends AbstractJBakeFacet {
             isCreated = ContentUtil.writeFile(contentType, postTitle, creationOrModificationDate, "post", tags, postStatusType);
         }
         return isCreated;
+    }
+
+    @Override
+    public void setListenAddress(String listenAddress) throws IOException {
+        this.listenAddress = listenAddress;
+    }
+
+    @Override
+    public void setPort(String port) throws IOException {
+        this.port = port;
     }
 
     @Override
