@@ -21,6 +21,7 @@ import org.jbake.forge.addon.types.ContentType;
 import org.jbake.forge.addon.types.PublishType;
 import org.jbake.forge.addon.types.TemplateType;
 import org.jbake.forge.addon.utils.ContentUtil;
+import org.jbake.forge.addon.utils.JBakeUtil;
 import org.jbake.forge.addon.utils.TemplateUtil;
 import org.jboss.forge.addon.dependencies.Coordinate;
 import org.jboss.forge.addon.dependencies.Dependency;
@@ -197,14 +198,10 @@ public class JBakeFacetImpl_2_0 extends AbstractJBakeFacet {
         Project selectedProject = getFaceted();
         DirectoryResource directoryResource = (DirectoryResource) selectedProject.getRoot();
         File codeFolder = directoryResource.getUnderlyingResourceObject();
-        String outputFilePath = null;
         if (buildType == (BuildSystemType.maven)) {
             jbakeFolderPath = codeFolder.getCanonicalPath() + "/src/main/jbake";
 
-        } else {
-            jbakeFolderPath = codeFolder.getCanonicalPath() + "/src/jbake";
         }
-
     }
 
     @Override
@@ -269,13 +266,13 @@ public class JBakeFacetImpl_2_0 extends AbstractJBakeFacet {
     public boolean createPage() throws IOException {
         Boolean isCreated = false;
         if (contentType == (ContentType.AsciiDoc)) {
-            ContentUtil.createFile(targetDirectory, contentType, pageTitle);
+            ContentUtil.createFile(targetDirectory, contentType, JBakeUtil.toSlug(pageTitle));
             isCreated = ContentUtil.writeFile(contentType, pageTitle, creationOrModificationDate, "page", tags, pageStatusType);
         } else if (contentType == (ContentType.HTML)) {
-            ContentUtil.createFile(targetDirectory, contentType, pageTitle);
+            ContentUtil.createFile(targetDirectory, contentType, JBakeUtil.toSlug(pageTitle));
             isCreated = ContentUtil.writeFile(contentType, pageTitle, creationOrModificationDate, "page", tags, pageStatusType);
         } else if (contentType == (ContentType.Markdown)) {
-            ContentUtil.createFile(targetDirectory, contentType, pageTitle);
+            ContentUtil.createFile(targetDirectory, contentType, JBakeUtil.toSlug(pageTitle));
             isCreated = ContentUtil.writeFile(contentType, pageTitle, creationOrModificationDate, "page", tags, pageStatusType);
         }
         return isCreated;
@@ -285,13 +282,13 @@ public class JBakeFacetImpl_2_0 extends AbstractJBakeFacet {
     public boolean createPost() throws IOException {
         Boolean isCreated = false;
         if (contentType == (ContentType.AsciiDoc)) {
-            ContentUtil.createFile(targetDirectory, contentType, postTitle);
+            ContentUtil.createFile(targetDirectory, contentType, JBakeUtil.toSlug(postTitle));
             isCreated = ContentUtil.writeFile(contentType, postTitle, creationOrModificationDate, "post", tags, postStatusType);
         } else if (contentType == (ContentType.HTML)) {
-            ContentUtil.createFile(targetDirectory, contentType, postTitle);
+            ContentUtil.createFile(targetDirectory, contentType, JBakeUtil.toSlug(postTitle));
             isCreated = ContentUtil.writeFile(contentType, postTitle, creationOrModificationDate, "post", tags, postStatusType);
         } else if (contentType == (ContentType.Markdown)) {
-            ContentUtil.createFile(targetDirectory, contentType, postTitle);
+            ContentUtil.createFile(targetDirectory, contentType, JBakeUtil.toSlug(postTitle));
             isCreated = ContentUtil.writeFile(contentType, postTitle, creationOrModificationDate, "post", tags, postStatusType);
         }
         return isCreated;
@@ -323,17 +320,14 @@ public class JBakeFacetImpl_2_0 extends AbstractJBakeFacet {
         DirectoryResource directoryResource = (DirectoryResource) selectedProject.getRoot();
         File codeFolder = directoryResource.getUnderlyingResourceObject();
         String filePathStringForMaven = null;
-        String filePathStringForGradle = null;
         try {
             filePathStringForMaven = codeFolder.getCanonicalPath() + "/src/main/jbake";
-            filePathStringForGradle = codeFolder.getCanonicalPath() + "/src/jbake";
-        } catch (IOException e) {
+            } catch (IOException e) {
             e.printStackTrace();
         }
 
         File f1 = new File(filePathStringForMaven);
-        File f2 = new File(filePathStringForGradle);
-        if (f1.exists() || f2.exists()) {
+        if (f1.exists()) {
             return true;
         } else {
             return false;
