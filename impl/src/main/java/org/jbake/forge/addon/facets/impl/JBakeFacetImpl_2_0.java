@@ -324,7 +324,6 @@ public class JBakeFacetImpl_2_0 extends AbstractJBakeFacet {
         DirectoryResource directoryResource = (DirectoryResource) selectedProject.getRoot();
         File codeFolder = directoryResource.getUnderlyingResourceObject();
         String filePathStringForMaven = null;
-        String filePathStringForGradle = null;
         try {
             filePathStringForMaven = codeFolder.getCanonicalPath() + "/src/main/jbake";
           //  filePathStringForGradle = codeFolder.getCanonicalPath() + "/src/jbake";
@@ -333,7 +332,6 @@ public class JBakeFacetImpl_2_0 extends AbstractJBakeFacet {
         }
 
         File f1 = new File(filePathStringForMaven);
-      //  File f2 = new File(filePathStringForGradle);
         if (f1.exists()) {
             return true;
         } else {
