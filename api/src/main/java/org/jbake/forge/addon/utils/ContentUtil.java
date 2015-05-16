@@ -15,20 +15,8 @@ import java.io.IOException;
 public class ContentUtil {
     static File file;
      public static void createFile(String filePath,ContentType contentType,String pageTitle) {
-         String extn=null;
-         if(contentType==ContentType.AsciiDoc)
-         {
-          extn="txt";
-         }
-         else if(contentType==ContentType.Markdown)
-         {
-             extn="md";
-         }
-         else if(contentType==ContentType.HTML)
-         {
-            extn="html";
-         }
-        file = new File(filePath+File.separator+pageTitle+"."+extn);
+
+        file = new File(filePath+File.separator+pageTitle+contentType.extn());
         try {
             file.createNewFile();
         } catch (IOException e) {
@@ -57,6 +45,8 @@ public class ContentUtil {
             writer.write("tags=" + tags);
             writer.newLine();
             writer.write("status=" + pageStatusType);
+            writer.newLine();
+            writer.write("~~~~~~");
             writer.newLine();
             writer.close(); //make sure you close the writer object
             return true;
