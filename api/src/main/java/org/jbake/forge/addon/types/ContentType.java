@@ -21,11 +21,14 @@ package org.jbake.forge.addon.types;
  * @author Rajmahendra Hegde <rajmahendra@gmail.com>
  */
 public enum ContentType {
-	Markdown, AsciiDoc, HTML;
+	Markdown(".md"), AsciiDoc(".adoc"), HTML(".htm");
 
 	String extn;
 
-	ContentType() {
+	public String extn() {return extn;}
+
+	ContentType(String extn) {
+		this.extn=extn;
 	}
 
 }
