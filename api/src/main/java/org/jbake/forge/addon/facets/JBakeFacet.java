@@ -42,29 +42,29 @@ public interface JBakeFacet extends ProjectFacet {
 
     void setTemplateType(TemplateType templateType);
 
-    public abstract void setContentType(ContentType contentType);
+    void setContentType(ContentType contentType);
 
-    public abstract void setPageStatusType(PublishType pageStatusType);
+    void setPageStatusType(PublishType pageStatusType);
 
-    public abstract void setPageTitle(String pageTitle);
+    void setPageTitle(String pageTitle);
 
-    public abstract void setPostTitle(String postTitle);
+    void setPostTitle(String postTitle);
 
-    public abstract void setTargetDirectory(String targetDirectory);
+    void setTargetDirectory(String targetDirectory);
 
-    public abstract void setCreationOrModificationDate(String creationOrModificationDate);
+    void setCreationOrModificationDate(String creationOrModificationDate);
 
-    public abstract void setPageTags(String tags);
+    void setPageTags(String tags);
 
-    public abstract void setPostTags(String tags);
+    void setPostTags(String tags);
 
-    public abstract boolean createPage() throws IOException;
+    boolean createPage() throws IOException;
 
-    public abstract boolean createPost() throws IOException;
+    boolean createPost() throws IOException;
 
-    public abstract void setListenAddress(String listenAddress) throws IOException;
+    void setListenAddress(String listenAddress) throws IOException;
 
-    public abstract void setPort(String port) throws IOException;
+    void setPort(String port) throws IOException;
 
-    public abstract void setPostStatusType(PublishType postStatusType);
+    void setPostStatusType(PublishType postStatusType);
 }
