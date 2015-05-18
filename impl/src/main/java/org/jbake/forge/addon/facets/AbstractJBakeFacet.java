@@ -19,12 +19,16 @@ import org.jbake.forge.addon.types.BuildSystemType;
 import org.jbake.forge.addon.types.ContentType;
 import org.jbake.forge.addon.types.PublishType;
 import org.jbake.forge.addon.types.TemplateType;
+import org.jbake.forge.addon.utils.ContentUtil;
+import org.jbake.forge.addon.utils.JBakeUtil;
 import org.jboss.forge.addon.dependencies.Coordinate;
 import org.jboss.forge.addon.dependencies.Dependency;
 import org.jboss.forge.addon.facets.AbstractFacet;
 import org.jboss.forge.addon.projects.Project;
 import org.jboss.forge.addon.projects.ProjectFacet;
+import org.jboss.forge.addon.resource.DirectoryResource;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Set;
 
@@ -36,15 +40,20 @@ import java.util.Set;
 public abstract class AbstractJBakeFacet extends AbstractFacet<Project>
         implements ProjectFacet, JBakeFacet {
 
-    public abstract BuildSystemType getBuildSystemType();
+    protected BuildSystemType buildSystemType=BuildSystemType.maven;
+    protected TemplateType templateType;
 
-    public abstract void setBuildSystemType(BuildSystemType buildSystemType);
-
-    public abstract TemplateType getTemplateType();
-
-
-    public abstract void setTemplateType(TemplateType templateType);
-
+    protected String jbakeFolderPath;
+    protected ContentType contentType;
+    protected PublishType pageStatusType;
+    protected String postTitle;
+    protected String pageTitle;
+    protected String targetDirectory;
+    protected String creationOrModificationDate;
+    protected String tags;
+    protected PublishType postStatusType;
+    protected String listenAddress;
+    protected String port;
 
     public abstract boolean install();
 
@@ -68,28 +77,100 @@ public abstract class AbstractJBakeFacet extends AbstractFacet<Project>
         return getSpecVersion().toString();
     }
 
-    // the following are abstract methods for page creation
-    public abstract void setContentType(ContentType contentType);
 
-    public abstract void setPageStatusType(PublishType pageStatusType);
+    public String getJbakeFolderPath() {
+        return jbakeFolderPath;
+    }
 
-    public abstract void setPageTitle(String pageTitle);
+    public void setJbakeFolderPath(String jbakeFolderPath) {
+        this.jbakeFolderPath = jbakeFolderPath;
+    }
 
-    public abstract void setTargetDirectory(String targetDirectory);
+    @Override
+    public void setContentType(ContentType contentType) {
+        this.contentType = contentType;
+    }
 
-    public abstract void setCreationOrModificationDate(String creationOrModificationDate);
+    @Override
+    public void setPageStatusType(PublishType pageStatusType) {
+        this.pageStatusType = pageStatusType;
+    }
 
-    public abstract void setPageTags(String tags);
+    @Override
+    public void setPageTitle(String pageTitle) {
+        this.pageTitle = pageTitle;
+    }
 
-    public abstract void setPostTitle(String postTitle);
+    @Override
+    public void setTargetDirectory(String targetDirectory) {
+        this.targetDirectory = targetDirectory;
+    }
 
-    public abstract void setPostTags(String tags);
+    @Override
+    public void setCreationOrModificationDate(String creationOrModificationDate) {
+        this.creationOrModificationDate = creationOrModificationDate;
+    }
 
-    public abstract boolean createPage() throws IOException;
+    @Override
+    public void setPageTags(String tags) {
+        this.tags = tags;
+    }
 
-    public abstract boolean createPost() throws IOException;
+    @Override
+    public void setPostTitle(String postTitle) {
+        this.postTitle = postTitle;
+    }
 
-    public abstract void setPostStatusType(PublishType postStatusType);
+    @Override
+    public void setPostTags(String tags) {
+        this.tags = tags;
+    }
 
+    @Override
+    public void setListenAddress(String listenAddress) throws IOException {
+        this.listenAddress = listenAddress;
+    }
+
+    @Override
+    public void setPort(String port) throws IOException {
+        this.port = port;
+    }
+
+    @Override
+    public void setPostStatusType(PublishType postStatusType) {
+        this.postStatusType = postStatusType;
+    }
+
+    @Override
+    public boolean createPage() throws IOException {
+        Boolean isCreated = false;
+        if (contentType == (ContentType.AsciiDoc)) {
+            ContentUtil.createFile(targetDirectory, contentType, JBakeUtil.toSlug(pageTitle));
+            isCreated = ContentUtil.writeFile(contentType, pageTitle, creationOrModificationDate, "page", tags, pageStatusType);
+        } else if (contentType == (ContentType.HTML)) {
+            ContentUtil.createFile(targetDirectory, contentType, JBakeUtil.toSlug(pageTitle));
+            isCreated = ContentUtil.writeFile(contentType, pageTitle, creationOrModificationDate, "page", tags, pageStatusType);
+        } else if (contentType == (ContentType.Markdown)) {
+            ContentUtil.createFile(targetDirectory, contentType, JBakeUtil.toSlug(pageTitle));
+            isCreated = ContentUtil.writeFile(contentType, pageTitle, creationOrModificationDate, "page", tags, pageStatusType);
+        }
+        return isCreated;
+    }
+
+    @Override
+    public boolean createPost() throws IOException {
+        Boolean isCreated = false;
+        if (contentType == (ContentType.AsciiDoc)) {
+            ContentUtil.createFile(targetDirectory, contentType, JBakeUtil.toSlug(postTitle));
+            isCreated = ContentUtil.writeFile(contentType, postTitle, creationOrModificationDate, "post", tags, postStatusType);
+        } else if (contentType == (ContentType.HTML)) {
+            ContentUtil.createFile(targetDirectory, contentType, JBakeUtil.toSlug(postTitle));
+            isCreated = ContentUtil.writeFile(contentType, postTitle, creationOrModificationDate, "post", tags, postStatusType);
+        } else if (contentType == (ContentType.Markdown)) {
+            ContentUtil.createFile(targetDirectory, contentType, JBakeUtil.toSlug(postTitle));
+            isCreated = ContentUtil.writeFile(contentType, postTitle, creationOrModificationDate, "post", tags, postStatusType);
+        }
+        return isCreated;
+    }
 
 }
