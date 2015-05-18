@@ -1,12 +1,12 @@
 /**
  * Copyright 2014 JBake
- * <p/>
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p/>
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- * <p/>
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -53,20 +53,6 @@ public class JBakeFacetImpl_2_0 extends AbstractJBakeFacet {
     public static final String BR_COM_INGENIEUX_JBAKE_MAVEN_PLUGIN = "br.com.ingenieux:jbake-maven-plugin";
     protected final DependencyInstaller installer;
 
-    public BuildSystemType buildSystemType;
-    public TemplateType templateType;
-    String jbakeFolderPath;
-    ContentType contentType;
-    PublishType pageStatusType;
-    String postTitle;
-    String pageTitle;
-    String targetDirectory;
-    String creationOrModificationDate;
-    String tags;
-    PublishType postStatusType;
-    String listenAddress;
-    String port;
-
 
     @Inject
     public JBakeFacetImpl_2_0(final DependencyInstaller installer) {
@@ -87,13 +73,6 @@ public class JBakeFacetImpl_2_0 extends AbstractJBakeFacet {
     @Inject
     private ProjectFactory projectFactory;
 
-    public String getJbakeFolderPath() {
-        return jbakeFolderPath;
-    }
-
-    public void setJbakeFolderPath(String jbakeFolderPath) {
-        this.jbakeFolderPath = jbakeFolderPath;
-    }
 
     @Override
     public void setTemplateType(TemplateType templateType) {
@@ -102,7 +81,7 @@ public class JBakeFacetImpl_2_0 extends AbstractJBakeFacet {
 
     @Override
     public boolean isJbakeInstalled() {
-        if (isJbakeFolderCreated() && isDependencyRequirementsMet())
+        if (isJbakeFolderCreated() )
             return true;
         else
             return false;
@@ -187,7 +166,6 @@ public class JBakeFacetImpl_2_0 extends AbstractJBakeFacet {
             } else {
 
             }
-
             return true;
         }
 
@@ -206,7 +184,7 @@ public class JBakeFacetImpl_2_0 extends AbstractJBakeFacet {
 
     @Override
     public boolean isInstalled() {
-        return false;
+        return isJbakeInstalled();
     }
 
     @Inject
@@ -222,94 +200,7 @@ public class JBakeFacetImpl_2_0 extends AbstractJBakeFacet {
         this.buildSystemType = buildSystemType;
     }
 
-    @Override
-    public void setContentType(ContentType contentType) {
-        this.contentType = contentType;
-    }
 
-    @Override
-    public void setPageStatusType(PublishType pageStatusType) {
-        this.pageStatusType = pageStatusType;
-    }
-
-    @Override
-    public void setPageTitle(String pageTitle) {
-        this.pageTitle = pageTitle;
-    }
-
-    @Override
-    public void setTargetDirectory(String targetDirectory) {
-        this.targetDirectory = targetDirectory;
-    }
-
-    @Override
-    public void setCreationOrModificationDate(String creationOrModificationDate) {
-        this.creationOrModificationDate = creationOrModificationDate;
-    }
-
-    @Override
-    public void setPageTags(String tags) {
-        this.tags = tags;
-    }
-
-    @Override
-    public void setPostTitle(String postTitle) {
-        this.postTitle = postTitle;
-    }
-
-    @Override
-    public void setPostTags(String tags) {
-        this.tags = tags;
-    }
-
-    @Override
-    public boolean createPage() throws IOException {
-        Boolean isCreated = false;
-        if (contentType == (ContentType.AsciiDoc)) {
-            ContentUtil.createFile(targetDirectory, contentType, JBakeUtil.toSlug(pageTitle));
-            isCreated = ContentUtil.writeFile(contentType, pageTitle, creationOrModificationDate, "page", tags, pageStatusType);
-        } else if (contentType == (ContentType.HTML)) {
-            ContentUtil.createFile(targetDirectory, contentType, JBakeUtil.toSlug(pageTitle));
-            isCreated = ContentUtil.writeFile(contentType, pageTitle, creationOrModificationDate, "page", tags, pageStatusType);
-        } else if (contentType == (ContentType.Markdown)) {
-            ContentUtil.createFile(targetDirectory, contentType, JBakeUtil.toSlug(pageTitle));
-            isCreated = ContentUtil.writeFile(contentType, pageTitle, creationOrModificationDate, "page", tags, pageStatusType);
-        }
-        return isCreated;
-    }
-
-    @Override
-    public boolean createPost() throws IOException {
-        Boolean isCreated = false;
-        if (contentType == (ContentType.AsciiDoc)) {
-            ContentUtil.createFile(targetDirectory, contentType, JBakeUtil.toSlug(postTitle));
-            isCreated = ContentUtil.writeFile(contentType, postTitle, creationOrModificationDate, "post", tags, postStatusType);
-        } else if (contentType == (ContentType.HTML)) {
-            ContentUtil.createFile(targetDirectory, contentType, JBakeUtil.toSlug(postTitle));
-            isCreated = ContentUtil.writeFile(contentType, postTitle, creationOrModificationDate, "post", tags, postStatusType);
-        } else if (contentType == (ContentType.Markdown)) {
-            ContentUtil.createFile(targetDirectory, contentType, JBakeUtil.toSlug(postTitle));
-            isCreated = ContentUtil.writeFile(contentType, postTitle, creationOrModificationDate, "post", tags, postStatusType);
-        }
-        return isCreated;
-    }
-
-    @Override
-    public void setListenAddress(String listenAddress) throws IOException {
-        this.listenAddress = listenAddress;
-    }
-
-    @Override
-    public void setPort(String port) throws IOException {
-        this.port = port;
-    }
-
-    @Override
-    public void setPostStatusType(PublishType postStatusType) {
-        this.postStatusType = postStatusType;
-    }
-
-    @Override
     public TemplateType getTemplateType() {
         return templateType;
     }
@@ -318,20 +209,7 @@ public class JBakeFacetImpl_2_0 extends AbstractJBakeFacet {
     public boolean isJbakeFolderCreated() {
         Project selectedProject = getFaceted();
         DirectoryResource directoryResource = (DirectoryResource) selectedProject.getRoot();
-        File codeFolder = directoryResource.getUnderlyingResourceObject();
-        String filePathStringForMaven = null;
-        try {
-            filePathStringForMaven = codeFolder.getCanonicalPath() + "/src/main/jbake";
-            } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        File f1 = new File(filePathStringForMaven);
-        if (f1.exists()) {
-            return true;
-        } else {
-            return false;
-        }
+        return directoryResource.getChildDirectory("/src/main/jbake").exists();
     }
 
     @Override
