@@ -20,6 +20,7 @@ import org.jbake.forge.addon.types.ContentType;
 import org.jbake.forge.addon.types.PublishType;
 import org.jbake.forge.addon.ui.AbstractJBakeCommand;
 import org.jboss.forge.addon.convert.Converter;
+import org.jboss.forge.addon.facets.constraints.FacetConstraint;
 import org.jboss.forge.addon.projects.Project;
 import org.jboss.forge.addon.projects.ProjectFactory;
 import org.jboss.forge.addon.resource.Resource;
@@ -46,7 +47,7 @@ import static org.jbake.forge.addon.utils.MessageUtil.properties;
 /**
  * @author Rajmahendra Hegde <rajmahendra@gmail.com>
  */
-//@FacetConstraint({ JBakeFacet.class })
+@FacetConstraint({ JBakeFacet.class })
 public class NewPageWizard extends AbstractJBakeCommand {
     @Inject
     private JBakeFacet jbakeVersion;
