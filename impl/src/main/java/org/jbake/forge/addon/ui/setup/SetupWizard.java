@@ -64,11 +64,11 @@ public class SetupWizard extends AbstractJBakeCommand {
     @Inject
     @WithAttributes(label = "Template Engine", type = InputType.RADIO, required = true, shortName = 't', description = "Template engine to be used for Templates")
     private UISelectOne<TemplateType> templateEngine;
-
+/*
     @Inject
     @WithAttributes(label = "Build System", type = InputType.DROPDOWN, required = true, shortName = 'b', description = "Build system to be used for building the application")
     private UISelectOne<BuildSystemType> buildSystemType;
-
+*/
     @Inject
     @WithAttributes(label = "listen Address", defaultValue = "localhost", shortName = 'l', description = "Give the host address")
     private UIInput<String> listenAddress;
@@ -82,14 +82,13 @@ public class SetupWizard extends AbstractJBakeCommand {
 
     @Override
     public void initializeUI(final UIBuilder builder) throws Exception {
-        builder.add(jbakeVersion).add(templateEngine).add(buildSystemType).add(listenAddress).add(port);
+        builder.add(jbakeVersion).add(templateEngine).add(listenAddress).add(port);
     }
 
     @Override
     public Result execute(UIExecutionContext context) throws Exception {
         project = getSelectedProject(context);
         jbakeVersion.getValue().setTemplateType(templateEngine.getValue());
-        jbakeVersion.getValue().setBuildSystemType(buildSystemType.getValue());
         jbakeVersion.getValue().setListenAddress(listenAddress.getValue());
         jbakeVersion.getValue().setPort(port.getValue());
         if (facetFactory.install(getSelectedProject(context.getUIContext()),

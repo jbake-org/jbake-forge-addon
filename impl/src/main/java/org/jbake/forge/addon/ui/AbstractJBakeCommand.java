@@ -51,6 +51,11 @@ public abstract class AbstractJBakeCommand extends AbstractProjectCommand {
     }
 
     @Override
+    protected boolean isProjectRequired() {
+        return true;
+    }
+
+    @Override
     protected ProjectFactory getProjectFactory()
     {
         return projectFactory;
