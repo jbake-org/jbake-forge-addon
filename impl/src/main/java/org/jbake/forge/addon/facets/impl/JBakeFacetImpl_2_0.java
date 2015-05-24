@@ -109,7 +109,6 @@ public class JBakeFacetImpl_2_0 extends AbstractJBakeFacet {
     @Override
     public void createJbakeFolderStructure() throws IOException {
         TemplateUtil.unzip(getTemplateType().toString(), jbakeFolderPath);
-
     }
 
 
@@ -145,8 +144,6 @@ public class JBakeFacetImpl_2_0 extends AbstractJBakeFacet {
 
         pluginFacet.addPlugin(jbakePlugin);
         pluginFacet.addPlugin(mavenWarPlugin);
-
-
     }
 
     @Override
@@ -171,7 +168,6 @@ public class JBakeFacetImpl_2_0 extends AbstractJBakeFacet {
 
     }
 
-
     private void setAbsoluteJbakeFolderPath(BuildSystemType buildType) throws IOException {
         Project selectedProject = getFaceted();
         DirectoryResource directoryResource = (DirectoryResource) selectedProject.getRoot();
@@ -187,8 +183,6 @@ public class JBakeFacetImpl_2_0 extends AbstractJBakeFacet {
         return isJbakeInstalled();
     }
 
-    @Inject
-    private MavenBuildSystem buildSystem;
 
     @Override
     public BuildSystemType getBuildSystemType() {
