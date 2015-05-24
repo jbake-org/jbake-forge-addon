@@ -21,7 +21,7 @@ package org.jbake.forge.addon.types;
  * @author Rajmahendra Hegde <rajmahendra@gmail.com>
  */
 public enum ContentType {
-	Markdown(".md"), AsciiDoc(".adoc"), HTML(".htm");
+	Markdown(".md"), AsciiDoc(".adoc"), HTML(".html");
 
 	String extn;
 
