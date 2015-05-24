@@ -29,26 +29,36 @@ public class ContentUtil {
         BufferedWriter writer = null;
         try {
             fWriter = new FileWriter(file);
-            /*title=First blog
-                    date=2014-12-02
-            type=post
-            tags=blog
-            status=published
-            ~~~~~~*/
             writer = new BufferedWriter(fWriter);
-            writer.write("title="+pageTitle);
-            writer.newLine(); //this is not actually needed for html files - can make your code more readable though
-            writer.write("date=" + creationOrModificationDate);
-            writer.newLine();
-            writer.write("type=" + pageOrPost);
-            writer.newLine();
-            writer.write("tags=" + tags);
-            writer.newLine();
-            writer.write("status=" + pageStatusType);
-            writer.newLine();
-            writer.write("~~~~~~");
-            writer.newLine();
-            writer.close(); //make sure you close the writer object
+            if (contentType == ContentType.AsciiDoc) {
+                writer.write("= " + pageTitle);
+                writer.newLine();
+                writer.write(creationOrModificationDate);
+                writer.newLine();
+                writer.write(":jbake-type: " + pageOrPost);
+                writer.newLine();
+                writer.write(":jbake-tags: " + tags);
+                writer.newLine();
+                writer.write("jbake-status: " + pageStatusType);
+                writer.newLine();
+                writer.newLine();
+                writer.newLine();
+            } else {
+                writer.write("title=" + pageTitle);
+                writer.newLine(); //this is not actually needed for html files - can make your code more readable though
+                writer.write("date=" + creationOrModificationDate);
+                writer.newLine();
+                writer.write("type=" + pageOrPost);
+                writer.newLine();
+                writer.write("tags=" + tags);
+                writer.newLine();
+                writer.write("status=" + pageStatusType);
+                writer.newLine();
+                writer.write("~~~~~~");
+                writer.newLine();
+                writer.newLine();
+            }
+            writer.close();
             return true;
         } catch (Exception e) {
             e.printStackTrace();

@@ -26,8 +26,11 @@ import org.jboss.forge.addon.dependencies.Dependency;
 import org.jboss.forge.addon.facets.AbstractFacet;
 import org.jboss.forge.addon.projects.Project;
 import org.jboss.forge.addon.projects.ProjectFacet;
+import org.jboss.forge.addon.projects.ProjectProvider;
 import org.jboss.forge.addon.resource.DirectoryResource;
+import org.jboss.forge.furnace.services.Imported;
 
+import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.util.Set;
@@ -54,6 +57,9 @@ public abstract class AbstractJBakeFacet extends AbstractFacet<Project>
     protected PublishType postStatusType;
     protected String listenAddress;
     protected String port;
+
+    @Inject
+    protected Imported<ProjectProvider> buildSystems;
 
     public abstract boolean install();
 
