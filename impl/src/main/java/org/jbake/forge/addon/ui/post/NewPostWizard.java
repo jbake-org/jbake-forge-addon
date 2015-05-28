@@ -51,9 +51,14 @@ public class NewPostWizard extends AbstractJBakeCommand {
 
     @Inject
     private JBakeFacet jbakeVersion;
+
     @Inject
     @WithAttributes(label = "Post Title", required = true, shortName = 't', description = "Post title")
     private UIInput<String> postTitle;
+
+    @Inject
+    @WithAttributes(label = "Author Name", required = true, shortName = 'a', description = "Author Name")
+    private UIInput<String> authorName;
 
     @Inject
     @WithAttributes(label = "Target Directory", type = InputType.DIRECTORY_PICKER, shortName = 'p', description = "Path of the post")
@@ -92,7 +97,7 @@ public class NewPostWizard extends AbstractJBakeCommand {
                     });
         }
 
-        builder.add(postTitle).add(targetDirectory).add(dateOfCreated)
+        builder.add(postTitle).add(authorName).add(targetDirectory).add(dateOfCreated)
                 .add(postTags).add(fileType).add(postStatus);
 
     }
